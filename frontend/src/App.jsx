@@ -13,6 +13,7 @@ function App() {
 
       <h1 className='bg-blue-200'> E commerce project </h1>
       <p>wellcome </p>
+      <h1>testing push</h1>
     </>
   )
 }
