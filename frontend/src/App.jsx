@@ -7,6 +7,7 @@ import Desserts from './pages/Desserts';
 import CustomOrders from './pages/CustomOrders';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ProductDetail from './pages/ProductDetails';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
    
       <Navbar/>
       <Routes>
+        <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/" element={<Home/>} />
         <Route path="/cakes" element={<Cakes/>} />
         <Route path="/Desserts" element={<Desserts/>} />
