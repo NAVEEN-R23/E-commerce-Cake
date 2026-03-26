@@ -1,19 +1,29 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+import Navbar from './components/Navbar'
+import { Routes, Route } from "react-router-dom";
+import Home from './pages/Home';
+import Cakes from './pages/Cakes';
+import Desserts from './pages/Desserts';
+import CustomOrders from './pages/CustomOrders';
+import About from './pages/About';
+import Contact from './pages/Contact';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  
 
   return (
     <>
-     
-
-      <h1 className='bg-blue-200'> E commerce project </h1>
-      <p>wellcome </p>
-      <h1>testing push</h1>
+   
+      <Navbar/>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/cakes" element={<Cakes/>} />
+        <Route path="/Desserts" element={<Desserts/>} />
+        <Route path="/custom" element={<CustomOrders/>} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/contact" element={<Contact/>} />
+      </Routes>
     </>
   )
 }
