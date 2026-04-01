@@ -7,6 +7,8 @@ import Desserts from './pages/Desserts';
 import CustomOrders from './pages/CustomOrders';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import ProductDetail from './pages/ProductDetails';
+import Footer from './components/Footer';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminHome from './pages/Admin/AdminHome';
@@ -35,6 +37,7 @@ function App() {
 
 
       </Routes>
+      <Footer/>
     </>
   )
 }

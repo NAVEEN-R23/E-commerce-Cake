@@ -10,6 +10,7 @@ const dotenv = require("dotenv");
 const cors = require("cors")
 
 const connectDB = require("./config/db");
+const Router = require("./routes/productRoutes");
 const loginRouter = require("./routes/authRoutes");
 const authRouter = require("./routes/authRoutes");
 
@@ -25,6 +26,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 connectDB()
 
+app.use("/products",Router)
 app.use("/api/auth",authRouter)
 
 const PORT = process.env.PORT
