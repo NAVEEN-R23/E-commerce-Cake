@@ -1,4 +1,9 @@
 // console.log("nodemon is running");
+const dns = require("dns");
+
+/* Fix MongoDB SRV DNS issue */
+dns.setDefaultResultOrder("ipv4first");
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require("express")
 const dotenv = require("dotenv");

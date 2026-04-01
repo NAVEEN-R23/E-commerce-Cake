@@ -18,7 +18,9 @@ function App() {
   return (
     <>
 
+    <Navbar/>
       <Routes>
+        
         <Route path="/" element={<Home/>} />
         <Route path="/cakes" element={<Cakes/>} />
         <Route path="/Desserts" element={<Desserts/>} />
@@ -31,7 +33,7 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route path="/admin" element={<AdminHome/>}/>
 
-      
+
       </Routes>
     </>
   )
