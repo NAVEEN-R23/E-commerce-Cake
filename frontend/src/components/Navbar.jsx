@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { FaHeart, FaShoppingCart, FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import AClogo from "../assets/AC_logo.png";
 
@@ -9,14 +9,13 @@ function Navbar() {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Cakes", path: "/cakes" },
-    { name: "Desserts", path: "/Desserts" },
+    { name: "Desserts", path: "/desserts" },
     { name: "Custom Orders", path: "/custom" },
     { name: "About US", path: "/about" },
     { name: "Contact US", path: "/contact" },
   ];
 
   return (
-    <>
     <nav className="bg-[#3b2207] border-b border-[#8B6914]">
 
       {/* Top Bar */}
@@ -32,17 +31,14 @@ function Navbar() {
           />
 
           {/* Search */}
-          <div className="hidden sm:flex items-center gap-2 bg-[#4a2e10] border border-[#8B6914] rounded-lg px-3 py-1.5 
-                          transition-all duration-300 
-                          hover:border-[#fde68a] hover:shadow-[0_0_8px_#fde68a40]
-                          focus-within:border-[#fde68a]">
+          <div className="hidden sm:flex items-center gap-2 bg-[#4a2e10] border border-[#8B6914] rounded-lg px-3 py-1.5 hover:border-[#fde68a] transition">
 
             <FaSearch className="text-[#8B6914] text-xs" />
 
             <input
               type="text"
               placeholder="Search..."
-              className="bg-transparent outline-none text-[#fde68a] placeholder-[#8B6914] text-xs md:text-sm w-24 md:w-36 focus:w-40 transition-all"
+              className="bg-transparent outline-none text-[#fde68a] placeholder-[#8B6914] text-xs md:text-sm w-24 md:w-36"
             />
           </div>
         </div>
@@ -50,7 +46,7 @@ function Navbar() {
         {/* Brand */}
         <div className="absolute left-1/2 -translate-x-1/2 text-center pointer-events-none">
           <h1
-            className="text-2xl md:text-5xl text-[#fde68a] leading-none"
+            className="text-2xl md:text-5xl text-[#fde68a]"
             style={{ fontFamily: "Style Script" }}
           >
             Angelic Cakes
@@ -63,23 +59,26 @@ function Navbar() {
         {/* Right */}
         <div className="ml-auto flex items-center gap-2 md:gap-3">
 
-          {/* Desktop Icons */}
           <div className="hidden sm:flex items-center gap-3">
 
+            {/* Wishlist */}
             <div className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition">
               <FaHeart size={12} />
-              <span className="absolute -top-1 -right-1 bg-[#fde68a] text-[#3b2207] text-[9px] w-4 h-4 rounded-full flex items-center justify-center">10</span>
             </div>
 
+            {/* Cart */}
             <div className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition">
               <FaShoppingCart size={12} />
-              <span className="absolute -top-1 -right-1 bg-[#fde68a] text-[#3b2207] text-[9px] w-4 h-4 rounded-full flex items-center justify-center">3</span>
             </div>
 
             {/* Login */}
-            <button className="hidden md:block bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-4 py-1.5 text-sm rounded-lg hover:border-[#fde68a] hover:shadow-[0_0_10px_#fde68a50] transition">
+            <Link
+              to="/login"
+              className="hidden md:block bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-4 py-1.5 text-sm rounded-lg hover:border-[#fde68a] transition"
+            >
               Login
-            </button>
+            </Link>
+
           </div>
 
           {/* Mobile Menu Button */}
@@ -89,6 +88,7 @@ function Navbar() {
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
+
         </div>
       </div>
 
@@ -99,10 +99,10 @@ function Navbar() {
             key={link.name}
             to={link.path}
             className={({ isActive }) =>
-              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 transition-all duration-300 ${
+              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${
                 isActive
                   ? "text-[#fde68a] border-[#fde68a]"
-                  : "text-[#8B6914] border-transparent hover:text-[#fde68a] hover:border-[#fde68a]"
+                  : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
               }`
             }
           >
@@ -114,31 +114,30 @@ function Navbar() {
       {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden flex flex-col items-center bg-[#2e1a06] border-t border-[#8B6914] py-3 space-y-3">
+
           {navLinks.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `text-sm tracking-widest uppercase transition ${
-                  isActive ? "text-[#fde68a]" : "text-[#8B6914] hover:text-[#fde68a]"
-                }`
-              }
+              className="text-sm tracking-widest uppercase text-[#8B6914] hover:text-[#fde68a]"
             >
               {link.name}
             </NavLink>
           ))}
 
-          <button className="mt-2 bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-5 py-2 rounded-lg hover:border-[#fde68a] transition">
+          <Link
+            to="/login"
+            onClick={() => setMenuOpen(false)}
+            className="mt-2 bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-5 py-2 rounded-lg hover:border-[#fde68a] transition"
+          >
             Login
-          </button>
+          </Link>
+
         </div>
       )}
 
     </nav>
-
-    {/* <Outlet/> */}
-    </>
   );
 }
 
