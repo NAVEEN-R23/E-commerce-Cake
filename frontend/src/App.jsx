@@ -19,20 +19,19 @@ function App() {
     <>
 
       <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path="/cakes" element={<Cakes/>} />
+        <Route path="/Desserts" element={<Desserts/>} />
+        <Route path="/custom" element={<CustomOrders/>} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/contact" element={<Contact/>} />
 
-        {/* Pages WITH Navbar */}
-        <Route path="/" element={<><Navbar /><Home /></>} />
-        <Route path="/cakes" element={<><Navbar /><Cakes /></>} />
-        <Route path="/desserts" element={<><Navbar /><Desserts /></>} />
-        <Route path="/custom" element={<><Navbar /><CustomOrders /></>} />
-        <Route path="/about" element={<><Navbar /><About /></>} />
-        <Route path="/contact" element={<><Navbar /><Contact /></>} />
-
-        {/* Page WITHOUT Navbar */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+{/* Page WITHOUT Navbar */}
+<Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register/>} />
         <Route path="/admin" element={<AdminHome/>}/>
 
+      
       </Routes>
     </>
   )
