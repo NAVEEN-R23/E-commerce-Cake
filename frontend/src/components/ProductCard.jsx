@@ -7,7 +7,7 @@ function ProductCard({ product }) {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   // Added 'id' to the destructuring!
-  const { id, image, title, description, price } = product;
+  const { _id, thumbnail, title, description, price } = product;
 
   const handleCartClick = (e) => {
     e.preventDefault(); // Prevents the Link from triggering if they just want to add to cart
@@ -27,11 +27,11 @@ function ProductCard({ product }) {
     <div className="relative w-full max-w-sm bg-[#2e1a06] border border-[#8B6914] rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-[#fde68a] hover:shadow-[0_0_15px_#fde68a30] group flex flex-col">
       
       {/* Link wrapping the top half of the card */}
-      <Link to={`/product/${id}`} className="block flex-grow">
+      <Link to={`/product/${_id}`} className="block flex-grow">
         {/* Image Container */}
         <div className="relative h-56 w-full overflow-hidden">
           <img
-            src={image}
+            src={`http://localhost:5000/${thumbnail}`}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 brightness-90 group-hover:brightness-100"
           />
@@ -52,7 +52,7 @@ function ProductCard({ product }) {
               {title}
             </h3>
             <span className="text-[#fde68a] font-bold text-lg whitespace-nowrap">
-              {price}
+             ₹ {price}
             </span>
           </div>
           <p className="text-[#8B6914] text-sm line-clamp-2 leading-relaxed">

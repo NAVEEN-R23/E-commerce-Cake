@@ -12,6 +12,8 @@ import Footer from './components/Footer';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminHome from './pages/Admin/AdminHome';
+import AdminProductForm from './pages/Admin/AddProduct';
+import AdminProducts from './pages/Admin/AdminProduct';
 
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
 
     <Navbar/>
       <Routes>
-        
+        <Route path="/product/:id" element={<ProductDetail/>}/>
         <Route path="/" element={<Home/>} />
         <Route path="/cakes" element={<Cakes/>} />
         <Route path="/Desserts" element={<Desserts/>} />
@@ -34,6 +36,9 @@ function App() {
 <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register/>} />
         <Route path="/admin" element={<AdminHome/>}/>
+        <Route path="/addproduct" element={<AdminProductForm/>}/>
+        <Route path="/adminproducts" element={<AdminProducts/>}/>
+
 
 
       </Routes>
