@@ -1,9 +1,26 @@
-import { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation, Link, NavLink } from "react-router-dom";
 import { FaHeart, FaShoppingCart, FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import AClogo from "../assets/AC_logo.png";
 
 function Navbar() {
+
+  const navigate = useNavigate();
+  const location = useLocation()
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
+    }
+  }, [location]);
+
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = [
@@ -23,7 +40,7 @@ function Navbar() {
 
         {/* Left */}
         <div className="flex items-center gap-3 md:gap-4">
-          
+
           <img
             src={AClogo}
             className="h-10 md:h-14 w-auto brightness-110 contrast-110"
@@ -72,12 +89,21 @@ function Navbar() {
             </div>
 
             {/* Login */}
-            <Link
-              to="/login"
-              className="hidden md:block bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-4 py-1.5 text-sm rounded-lg hover:border-[#fde68a] transition"
-            >
-              Login
-            </Link>
+            {user ? (
+              <div
+                onClick={() => navigate("/profile")}
+                className="cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition font-semibold"
+              >
+                {user?.name?.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="hidden md:block bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-4 py-1.5 text-sm rounded-lg hover:border-[#fde68a] transition"
+              >
+                Login
+              </Link>
+            )}
 
           </div>
 
@@ -99,10 +125,9 @@ function Navbar() {
             key={link.name}
             to={link.path}
             className={({ isActive }) =>
-              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${
-                isActive
-                  ? "text-[#fde68a] border-[#fde68a]"
-                  : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
+              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${isActive
+                ? "text-[#fde68a] border-[#fde68a]"
+                : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
               }`
             }
           >
@@ -126,13 +151,25 @@ function Navbar() {
             </NavLink>
           ))}
 
-          <Link
-            to="/login"
-            onClick={() => setMenuOpen(false)}
-            className="mt-2 bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-5 py-2 rounded-lg hover:border-[#fde68a] transition"
+          {user ? (
+            <div
+            onClick={() => {
+              navigate("/profile");
+              setMenuOpen(false);
+            }}
+            className="cursor-pointer w-9 h-9 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] font-semibold"
           >
-            Login
-          </Link>
+            {user?.name?.charAt(0).toUpperCase()}
+          </div>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setMenuOpen(false)}
+              className="bg-[#4a2e10] border border-[#8B6914] text-[#fde68a] px-4 py-1.5 text-sm rounded-lg hover:border-[#fde68a] transition"
+            >
+              Login
+            </Link>
+          )}
 
         </div>
       )}
