@@ -80,6 +80,11 @@ const productSchema = new mongoose.Schema(
       default: false,
     },
 
+    Eggless:{
+      type:Boolean,
+      default: false,
+    },
+
     // SEO / Tags
     tags: [String],
   },

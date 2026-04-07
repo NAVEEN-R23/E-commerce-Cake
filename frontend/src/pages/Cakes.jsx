@@ -1,36 +1,55 @@
-import React from 'react';
-import ProductCard from '../components/ProductCard';
-// Make sure this path points exactly to where you saved your dummy data!
-import { productsData } from '../pages/dummyProducts'; 
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import ProductCard from "../components/ProductCard";
 
 const Cakes = () => {
-  // Filter the data to only include items in the "Cakes" category
-  const cakeProducts = productsData.filter(
-    (product) => product.category === "Cakes"
-  );
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/products/getdata");
+
+      // ✅ Filter Cakes category from backend data
+      const cakeProducts = res.data.data.filter(
+        (product) => product.category === "Cakes"
+      );
+
+      setProducts(cakeProducts);
+    } catch (error) {
+      console.log("Error fetching cakes:", error);
+    }
+  };
 
   return (
-    // Added a dark background and padding to match your luxurious theme
-    <div className="bg-[white] min-h-screen py-10 px-4 md:px-10">
+    <div className="bg-white min-h-screen py-10 px-4 md:px-10">
       
-      <h1 
-        className="text-4xl md:text-5xl text-[#fde68a] text-center mb-10" 
+      <h1
+        className="text-4xl md:text-5xl text-[#8B6914] text-center mb-10"
         style={{ fontFamily: "Style Script" }}
       >
         Signature Cakes
       </h1>
-      
+
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-          
-          {/* Map over the filtered array instead of the whole thing */}
-          {cakeProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-          
+
+          {products.length > 0 ? (
+            products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))
+          ) : (
+            <p className="text-[#8B6914] text-center col-span-3">
+              No cakes available
+            </p>
+          )}
+
         </div>
       </div>
-      
+
     </div>
   );
 };

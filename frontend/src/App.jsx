@@ -15,6 +15,8 @@ import ProductDetail from './pages/ProductDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminHome from './pages/Admin/AdminHome';
+import AdminProductForm from './pages/Admin/AddProduct';
+import AdminProducts from './pages/Admin/AdminProduct';
 
 
 
