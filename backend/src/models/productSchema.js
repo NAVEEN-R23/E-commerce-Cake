@@ -1,4 +1,4 @@
-const mongoose =require("mongoose")
+const mongoose = require("mongoose");
 
 const variantSchema = new mongoose.Schema({
   weight: {
@@ -38,6 +38,11 @@ const productSchema = new mongoose.Schema(
     },
     subCategory: String,
 
+    // ✅ NEW: Added top-level weight to match your new Admin Form dropdown
+    weight: {
+      type: String, 
+    },
+
     // Media
     images: [
       {
@@ -47,7 +52,7 @@ const productSchema = new mongoose.Schema(
     thumbnail: String,
 
     // Cake-specific 🎂
-    variants: [variantSchema], // weight options
+    variants: [variantSchema], // Keep this if you still want to offer multiple weights for a single cake later!
     flavors: [String], // chocolate, vanilla
 
     // Stock & Availability
@@ -79,9 +84,8 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
-    Eggless:{
-      type:Boolean,
+    Eggless: {
+      type: Boolean,
       default: false,
     },
 
@@ -91,4 +95,4 @@ const productSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports =  mongoose.model("Product", productSchema);
+module.exports = mongoose.model("Product", productSchema);

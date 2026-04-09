@@ -13,7 +13,7 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-[#2e1a06] border-t border-[#8B6914] text-[#8B6914] mt-10">
+    <footer className="bg-[#2e1a06] border-t border-[#8B6914] text-[#8B6914] ">
 
       {/* Top Section */}
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">

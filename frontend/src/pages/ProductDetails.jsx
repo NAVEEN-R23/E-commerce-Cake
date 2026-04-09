@@ -562,16 +562,26 @@ useEffect(() => {
             </p>
 
             {/* Badge */}
-            {product.Eggless && (
-              <span className="inline-block bg-green-100 text-green-700 px-3 py-1 text-xs rounded-full mt-2">
-                Eggless
-              </span>
-            )}
+            {/* 🔥 BADGES ROW (Weight & Eggless) */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {/* If the product has a specific weight from your Admin form */}
+              {product.weight && (
+                <span className="inline-block bg-[#fde68a] text-[#3b2207] px-4 py-1 text-sm rounded-full font-semibold shadow-sm border border-[#8B6914]/30">
+                  {product.weight}
+                </span>
+              )}
+              
+              {product.Eggless && (
+                <span className="inline-block bg-green-100 text-green-700 px-4 py-1 text-sm rounded-full font-semibold shadow-sm border border-green-300">
+                  Eggless
+                </span>
+              )}
+            </div>
 
             <p className="mt-4 text-gray-600">
               {product.shortDescription}
             </p>
-
+            
             {/* Variants */}
             {product.variants?.length > 0 && (
               <div className="mt-6">
