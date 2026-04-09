@@ -128,7 +128,7 @@ return (
                 {/* 🖼️ Image */}
                 <td className="p-2 border">
                   <img
-                    src={`http://localhost:5000/${product.thumbnail}`}
+                    src={`http://localhost:5000/uploads/${product.thumbnail}`}
                     alt={product.title}
                     className="w-16 h-16 object-cover mx-auto rounded"
                   />

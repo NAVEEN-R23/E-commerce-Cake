@@ -38,6 +38,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/product/:id" element={<ProductDetail/>}/>
       </Route>
         
         {/* Pages WITHOUT Navbar */}
@@ -48,6 +49,8 @@ function App() {
 
       {/* Admin */}
       <Route path="/admin" element={<AdminHome />} />
+      <Route path="/addproduct" element={<AdminProductForm/>}/>
+      <Route path="/adminproducts" element={<AdminProducts/>}/>
 
 
       </Routes>

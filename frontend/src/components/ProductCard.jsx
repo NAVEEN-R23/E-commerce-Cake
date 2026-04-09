@@ -31,7 +31,7 @@ function ProductCard({ product }) {
         {/* Image Container */}
         <div className="relative h-56 w-full overflow-hidden">
           <img
-            src={`http://localhost:5000/${thumbnail}`}
+            src={`http://localhost:5000/uploads/${thumbnail}`}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 brightness-90 group-hover:brightness-100"
           />
