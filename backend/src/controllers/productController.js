@@ -92,6 +92,7 @@
 //     getAlldata
 // };
 const Product = require("../models/productSchema");
+const cloudinary = require("../config/cloudinary");
 
 // ✅ Helper function moved OUTSIDE so both create and update can use it!
 const safeParse = (data) => {
@@ -127,8 +128,17 @@ const createProduct = async (req, res) => {
     const variants = req.body.variants ? safeParse(req.body.variants) : [];
     const flavors = req.body.flavors ? safeParse(req.body.flavors) : [];
 
-    const images = req.files?.images?.map((file) => file.filename) || [];
-    const thumbnail = req.files?.thumbnail?.[0]?.filename || "";
+   const images =
+  req.files?.images?.map((file) => ({
+    url: file.path,
+    public_id: file.filename,
+  })) || [];
+   const thumbnail = req.files?.thumbnail?.[0]
+  ? {
+      url: req.files.thumbnail[0].path,
+      public_id: req.files.thumbnail[0].filename,
+    }
+  : null;
 
     const productData = {
       title,
@@ -203,11 +213,11 @@ const updateProduct = async (req, res) => {
     // 🖼️ Handle images
     if (req.files?.images) {
       // Assuming you want the filename like in createProduct
-      updateData.images = req.files.images.map((file) => file.filename); 
+      updateData.images = req.files.images.map((file) => file.path);
     }
 
     if (req.files?.thumbnail) {
-      updateData.thumbnail = req.files.thumbnail[0].filename;
+      updateData.thumbnail = req.files.thumbnail[0].path;
     }
 
     const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
@@ -225,20 +235,35 @@ const updateProduct = async (req, res) => {
 };
 
 // ================= DELETE =================
+
+
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedProduct = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
 
-    if (!deletedProduct) {
+    if (!product) {
       return res.status(404).json({
         message: "Product not found",
       });
     }
 
+    // 🔥 Delete images from Cloudinary
+    for (let img of product.images) {
+      await cloudinary.uploader.destroy(img.public_id);
+    }
+
+    // 🔥 Delete thumbnail
+    if (product.thumbnail?.public_id) {
+      await cloudinary.uploader.destroy(product.thumbnail.public_id);
+    }
+
+    // Delete from DB
+    await Product.findByIdAndDelete(id);
+
     res.status(200).json({
-      message: "Product deleted successfully",
+      message: "Product & images deleted successfully",
     });
   } catch (error) {
     console.error("Delete Error:", error);

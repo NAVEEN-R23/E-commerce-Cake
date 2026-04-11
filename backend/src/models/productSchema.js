@@ -44,12 +44,16 @@ const productSchema = new mongoose.Schema(
     },
 
     // Media
-    images: [
-      {
-        type: String, // image URLs
-      },
-    ],
-    thumbnail: String,
+   images: [
+  {
+    url: String,
+    public_id: String,
+  },
+],
+thumbnail: {
+  url: String,
+  public_id: String,
+},
 
     // Cake-specific 🎂
     variants: [variantSchema], // Keep this if you still want to offer multiple weights for a single cake later!
