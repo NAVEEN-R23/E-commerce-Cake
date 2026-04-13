@@ -1,10 +1,17 @@
-const express = require("express")
-const customOrderRouter = express.Router()
+const express = require("express");
+const customOrderRouter = express.Router();
 
-const upload = require("../middleware/multer")
-const { createCustomOrder } = require("../controllers/customOderController")
+const {
+  createCustomOrder,
+  getCustomOrders,
+  deleteCustomOrder,
+} = require("../controllers/customOrderController"); // ✅ fixed spelling
 
-customOrderRouter.post("/custom-order", upload.single("image"), createCustomOrder)
+const upload = require("../middleware/multer");
 
-module.exports = customOrderRouter
+// ✅ Routes
+customOrderRouter.post("/custom-order", upload.single("image"), createCustomOrder);
+customOrderRouter.get("/getdata", getCustomOrders);
+customOrderRouter.delete("/deletedata/:id", deleteCustomOrder);
 
+module.exports = customOrderRouter;

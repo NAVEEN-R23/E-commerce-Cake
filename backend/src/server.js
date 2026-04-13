@@ -14,8 +14,8 @@ const connectDB = require("./config/db");
 const Router = require("./routes/productRoutes");
 const loginRouter = require("./routes/authRoutes");
 const authRouter = require("./routes/authRoutes");
-const customOrderRouter = require("./routes/customOrderRoutes");
-const wishlistRoute = require("./routes/wishlistRoutes");
+const customOrderRoutes = require("./routes/customOrderRoutes");
+
 
 const app = express()
 
@@ -32,6 +32,7 @@ app.use("/products",Router)
 app.use("/api/auth",authRouter)
 app.use("/api",customOrderRouter)   
 app.use("/uploads", express.static("uploads"));
+app.use("/api", customOrderRoutes);
 app.use("/wishlist", wishlistRoute)
 
 const PORT = process.env.PORT
