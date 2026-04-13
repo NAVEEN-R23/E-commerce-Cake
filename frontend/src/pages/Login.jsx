@@ -55,11 +55,7 @@ function Login() {
       console.log("userdata :" , res.data.data);
       console.log("token :" , res.data.token);
 
-      const user = {
-        name: res.data.data.name,
-        email: res.data.data.email
-      };
-      localStorage.setItem("user",JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(res.data.data));
 
       const token =  res.data.token
       alert(res.data.message);
