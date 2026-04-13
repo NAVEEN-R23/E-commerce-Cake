@@ -1,25 +1,30 @@
 const multer = require("multer");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("../config/cloudinary"); // make sure you created this
 
-// storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
+// storage config (Cloudinary)
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "uploads", // same as your old folder name
+    format: async (req, file) => {
+      return "png"; // or keep original if you want
+    },
+    public_id: (req, file) => {
+      return Date.now() + "-" + file.originalname;
+    },
   },
 });
 
-// file filter
+// file filter (same as your old one)
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpg|jpeg|png/;
-  const ext = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const ext = allowedTypes.test(file.mimetype);
 
   if (ext) {
     cb(null, true);
   } else {
-    cb("Only images are allowed");
+    cb(new Error("Only images are allowed"), false);
   }
 };
 

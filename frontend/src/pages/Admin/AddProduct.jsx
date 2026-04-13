@@ -1,5 +1,6 @@
 import { useState } from "react";
-import bgImage from "../images/bg1.png"
+import bgImage from "../images/bg1.png";
+
 function AdminProductForm() {
   const [formData, setFormData] = useState({
     title: "",
@@ -9,6 +10,7 @@ function AdminProductForm() {
     discountPrice: "",
     category: "",
     subCategory: "",
+    weight: "", // ✅ Added weight to state
     stock: "",
     flavors: "",
     isFeatured: false,
@@ -28,39 +30,49 @@ function AdminProductForm() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  const data = new FormData();
+    const data = new FormData();
 
-  Object.keys(formData).forEach((key) => {
-    if (key !== "flavors") {
-      data.append(key, formData[key]);
+    Object.keys(formData).forEach((key) => {
+      if (key !== "flavors") {
+        data.append(key, formData[key]);
+      }
+    });
+
+    // ✅ FIX flavors
+    const flavorsArray = formData.flavors
+      ? formData.flavors.split(",").map((f) => f.trim())
+      : [];
+
+    data.append("flavors", JSON.stringify(flavorsArray));
+
+    // images
+    for (let i = 0; i < images.length; i++) {
+      data.append("images", images[i]);
     }
-  });
 
-  // ✅ FIX flavors
-  const flavorsArray = formData.flavors
-    ? formData.flavors.split(",").map(f => f.trim())
-    : [];
+    data.append("thumbnail", thumbnail);
 
-  data.append("flavors", JSON.stringify(flavorsArray));
+   const res = await fetch("http://localhost:5000/products/createdata", {
+  method: "POST",
+  body: data,
+});
 
-  // images
-  for (let i = 0; i < images.length; i++) {
-    data.append("images", images[i]);
-  }
+const result = await res.json();
 
-  data.append("thumbnail", thumbnail);
-
-  await fetch("http://localhost:5000/products/createdata", {
-    method: "POST",
-    body: data,
-  });
-
+if (res.ok) {
   alert("Product created successfully!");
-};
+} else {
+  alert(result.message || "Error creating product");
+}
+  };
+
   return (
-    <div className="min-h-screen p-6 text-[#fde68a] bg-cover bg-center" style={{backgroundImage: `url(${bgImage})`}} >
+    <div
+      className="min-h-screen p-6 text-[#fde68a] bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <form
         onSubmit={handleSubmit}
         className="max-w-3xl mx-auto bg-[#3b2207] p-6 rounded-xl border border-[#8B6914] space-y-4"
@@ -77,9 +89,21 @@ function AdminProductForm() {
 
         <input name="discountPrice" type="number" placeholder="Discount Price" onChange={handleChange} className="input" />
 
-        <input name="category" placeholder="Category" onChange={handleChange} className="input" />
+        <select name="category" onChange={handleChange} className="input">
+          <option value="">Select Category</option>
+          <option value="Cakes">Cakes</option>
+          <option value="Desserts">Desserts</option>
+        </select>
 
         <input name="subCategory" placeholder="Sub Category" onChange={handleChange} className="input" />
+
+        {/* ✅ Added Weight Dropdown */}
+        <select name="weight" onChange={handleChange} className="input text-black">
+          <option value="">Select Weight</option>
+          <option value="500g">500g</option>
+          <option value="1kg">1kg</option>
+          <option value="2kg">2kg</option>
+        </select>
 
         <input name="stock" type="number" placeholder="Stock" onChange={handleChange} className="input" />
 
@@ -88,13 +112,13 @@ function AdminProductForm() {
         {/* Image Upload */}
         <div>
           <label>Upload Images</label>
-          <input type="file" multiple onChange={(e) => setImages(e.target.files)} />
+         <input type="file" multiple accept="image/*" onChange={(e) => setImages(Array.from(e.target.files))} />
         </div>
 
         {/* Thumbnail */}
         <div>
           <label>Thumbnail</label>
-          <input type="file" onChange={(e) => setThumbnail(e.target.files[0])} />
+          <input type="file" accept="image/*" onChange={(e) => setThumbnail(e.target.files[0])} />
         </div>
 
         {/* Checkboxes */}
@@ -107,7 +131,6 @@ function AdminProductForm() {
             <input type="checkbox" name="isBestSeller" onChange={handleChange} /> Best Seller
           </label>
 
-          
           <label>
             <input type="checkbox" name="Eggless" onChange={handleChange} /> Eggless
           </label>

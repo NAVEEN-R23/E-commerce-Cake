@@ -1,90 +1,240 @@
-import React, { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { productsData } from '../pages/dummyProducts'; // Adjust path if needed
-import { FaShoppingCart, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import axios from "axios";
+import {
+  FaShoppingCart,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
 
 const ProductDetail = () => {
-  const { id } = useParams(); // Gets the ID from the URL (/product/1)
+  const { id } = useParams();
+
+  const [product, setProduct] = useState(null);
+  const [mainImage, setMainImage] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [inCart, setInCart] = useState(false);
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
-  // Find the specific product that matches the ID
-  // Note: useParams returns a string, so we convert it to a Number to match our data
-  const product = productsData.find((p) => p.id === Number(id));
+useEffect(() => {
+  fetchProduct();
+  window.scrollTo(0, 0); // 🔥 smooth UX
+}, [id]);
+  const fetchProduct = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5000/products/getdata`
+      );
 
-  // If someone types a random ID in the URL that doesn't exist
+      const allProducts = res.data.data;
+      const found = allProducts.find((p) => p._id === id);
+
+      setProduct(found);
+      setMainImage(found?.thumbnail?.url || found?.images?.[0]?.url);
+      setSelectedVariant(found?.variants?.[0]);
+
+      // ✅ Related Products (same category)
+      const related = allProducts.filter(
+        (p) => p.category === found.category && p._id !== found._id
+      );
+
+      setRelatedProducts(related.slice(0, 4));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   if (!product) {
     return (
-      <div className="bg-[#1a0f03] min-h-screen flex flex-col items-center justify-center text-[#fde68a]">
-        <h2 className="text-3xl mb-4 font-semibold">Product Not Found</h2>
-        <Link to="/cakes" className="text-[#8B6914] hover:text-[#fde68a] underline underline-offset-4">
-          Return to Cakes
-        </Link>
+      <div className="min-h-screen flex items-center justify-center text-[#8B6914]">
+        Loading...
       </div>
     );
   }
 
-  const handleCartClick = () => {
-    if (!inCart) setInCart(true);
-    else console.log("Navigating to cart...");
-  };
-
   return (
-    <div className="bg-[white] min-h-screen py-10 px-4 md:px-10">
-      <div className="max-w-5xl mx-auto">
-        
-        {/* Back Button */}
-        <Link 
-          to={-1} // Goes back to the previous page (Cakes or Desserts)
-          className="inline-flex items-center gap-2 text-[#8B6914] hover:text-[#fde68a] transition mb-8 text-sm uppercase tracking-widest"
+    <div className="bg-[#fffaf0] min-h-screen py-10 px-4 md:px-10">
+      <div className="max-w-6xl mx-auto">
+
+        {/* Back */}
+        <Link
+          to={-1}
+          className="flex items-center gap-2 text-[#8B6914] mb-6 hover:underline"
         >
-          <FaArrowLeft /> Back to Menu
+          <FaArrowLeft /> Back
         </Link>
 
-        {/* Product Layout */}
-        <div className="flex flex-col md:flex-row gap-10 bg-[#2e1a06] border border-[#8B6914] rounded-2xl p-6 md:p-10 shadow-[0_0_20px_#00000050]">
-          
-          {/* Left: Big Image */}
-          <div className="w-full md:w-1/2 h-80 md:h-[450px] rounded-xl overflow-hidden border border-[#8B6914]">
-            <img 
-              src={product.image} 
-              alt={product.title} 
-              className="w-full h-full object-cover"
-            />
+        {/* MAIN SECTION */}
+        <div className="grid md:grid-cols-2 gap-10 bg-white shadow-lg rounded-2xl p-6">
+
+          {/* LEFT */}
+          <div>
+            {/* Main Image */}
+            <div className="h-96 rounded-xl overflow-hidden border shadow">
+              <img
+                src={mainImage}
+                className="w-full h-full object-cover hover:scale-110 transition duration-500"
+                alt=""
+              />
+            </div>
+
+            {/* Thumbnails */}
+            {/* Thumbnails */}
+            <div className="flex gap-3 mt-4">
+              {[product.thumbnail, ...(product.images || [])].map((img, i) => (
+                <img
+                  key={i}
+                  src={img?.url}
+                  alt="thumbnail"
+                  onClick={() => setMainImage(img?.url)}
+                  className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
+                    mainImage === img?.url ? "border-[#8B6914]" : "border-gray-200"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Right: Product Info */}
-          <div className="w-full md:w-1/2 flex flex-col justify-center">
-            <span className="text-[#8B6914] text-xs uppercase tracking-[4px] mb-2">
-              {product.category}
-            </span>
-            <h1 className="text-3xl md:text-5xl text-[#fde68a] font-semibold leading-tight mb-4">
+          {/* RIGHT */}
+          <div>
+            <p className="text-sm text-[#8B6914] uppercase">
+              {product.category} / {product.subCategory}
+            </p>
+
+            <h1 className="text-4xl font-bold text-[#3b2207] my-3">
               {product.title}
             </h1>
-            <p className="text-2xl text-[#fde68a] font-bold mb-6">
-              {product.price}
+
+            {/* Price */}
+            <div className="flex items-center gap-4">
+              <span className="text-3xl font-bold text-[#3b2207]">
+                ₹{selectedVariant?.price || product.price}
+              </span>
+
+              {product.discountPrice && (
+                <span className="line-through text-gray-400">
+                  ₹{product.price}
+                </span>
+              )}
+            </div>
+
+            {/* Stock */}
+            <p className="mt-2">
+              {product.stock > 0 ? (
+                <span className="text-green-600 font-medium">In Stock</span>
+              ) : (
+                <span className="text-red-600 font-medium">Out of Stock</span>
+              )}
             </p>
-            <p className="text-[#8B6914] leading-relaxed mb-8 md:text-lg">
+
+            {/* Badge */}
+            {/* 🔥 BADGES ROW (Weight & Eggless) */}
+            <div className="flex flex-wrap gap-2 mt-4">
+              {/* If the product has a specific weight from your Admin form */}
+              {product.weight && (
+                <span className="inline-block bg-[#fde68a] text-[#3b2207] px-4 py-1 text-sm rounded-full font-semibold shadow-sm border border-[#8B6914]/30">
+                  {product.weight}
+                </span>
+              )}
+              
+              {product.Eggless && (
+                <span className="inline-block bg-green-100 text-green-700 px-4 py-1 text-sm rounded-full font-semibold shadow-sm border border-green-300">
+                  Eggless
+                </span>
+              )}
+            </div>
+
+            <p className="mt-4 text-gray-600">
+              {product.shortDescription}
+            </p>
+            
+            {/* Variants */}
+            {product.variants?.length > 0 && (
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">Select Weight:</h3>
+                <div className="flex gap-3">
+                  {product.variants.map((v, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedVariant(v)}
+                      className={`px-4 py-2 rounded-full border transition ${
+                        selectedVariant?.weight === v.weight
+                          ? "bg-[#8B6914] text-white"
+                          : "hover:border-[#8B6914]"
+                      }`}
+                    >
+                      {v.weight}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Flavors */}
+            {product.flavors?.length > 0 && (
+              <div className="mt-6">
+                <h3 className="font-semibold mb-2">Flavors:</h3>
+                <div className="flex gap-2 flex-wrap">
+                  {product.flavors.map((f, i) => (
+                    <span
+                      key={i}
+                      className="px-3 py-1 bg-[#fde68a] text-[#3b2207] rounded-full text-sm"
+                    >
+                      {f}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <p className="mt-6 text-gray-700 leading-relaxed">
               {product.description}
             </p>
 
-            {/* Add to Cart Big Button */}
+            {/* Button */}
             <button
-              onClick={handleCartClick}
-              className={`flex items-center justify-center gap-3 w-full md:w-2/3 py-4 rounded-xl font-bold tracking-widest uppercase transition-all duration-300 border ${
-                inCart
-                  ? "bg-[#fde68a] border-[#fde68a] text-[#3b2207] hover:bg-[#e6c15c] shadow-[0_0_15px_#fde68a40]"
-                  : "bg-[#4a2e10] border-[#8B6914] text-[#fde68a] hover:border-[#fde68a] hover:shadow-[0_0_15px_#fde68a40]"
-              }`}
+              onClick={() => setInCart(true)}
+              className="mt-8 w-full py-3 bg-[#3b2207] hover:bg-[#8B6914] text-white rounded-lg flex justify-center items-center gap-2 transition"
             >
               {inCart ? (
-                <>Go to Checkout <FaArrowRight /></>
+                <>Go to Cart <FaArrowRight /></>
               ) : (
-                <><FaShoppingCart /> Add to Order</>
+                <><FaShoppingCart /> Add to Cart</>
               )}
             </button>
           </div>
-
         </div>
+
+        {/* 🔥 RELATED PRODUCTS */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-[#3b2207] mb-6">
+            Related Products
+          </h2>
+
+          <div className="grid md:grid-cols-4 gap-6">
+            {relatedProducts.map((item) => (
+              <Link
+                to={`/product/${item._id}`}
+                key={item._id}
+                className="bg-white rounded-xl shadow hover:shadow-lg transition p-3"
+              >
+                <img
+                  src={item.thumbnail?.url}
+                  className="h-40 w-full object-cover rounded"
+                />
+
+                <h3 className="mt-3 font-semibold text-[#3b2207]">
+                  {item.title}
+                </h3>
+
+                <p className="text-[#8B6914] font-bold">
+                  ₹{item.price}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );

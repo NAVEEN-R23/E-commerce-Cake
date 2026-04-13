@@ -92,6 +92,16 @@
 //     getAlldata
 // };
 const Product = require("../models/productSchema");
+const cloudinary = require("../config/cloudinary");
+
+// ✅ Helper function moved OUTSIDE so both create and update can use it!
+const safeParse = (data) => {
+  try {
+    return typeof data === "string" ? JSON.parse(data) : data;
+  } catch {
+    return [];
+  }
+};
 
 // ================= CREATE =================
 const createProduct = async (req, res) => {
@@ -107,6 +117,7 @@ const createProduct = async (req, res) => {
       discountPrice,
       category,
       subCategory,
+      weight, // ✅ ADDED weight here
       stock,
       isFeatured,
       isBestSeller,
@@ -114,19 +125,20 @@ const createProduct = async (req, res) => {
       tags,
     } = req.body;
 
-    const safeParse = (data) => {
-      try {
-        return typeof data === "string" ? JSON.parse(data) : data;
-      } catch {
-        return [];
-      }
-    };
-
     const variants = req.body.variants ? safeParse(req.body.variants) : [];
     const flavors = req.body.flavors ? safeParse(req.body.flavors) : [];
 
-    const images = req.files?.images?.map(file => file.filename) || [];
-    const thumbnail = req.files?.thumbnail?.[0]?.filename || "";
+   const images =
+  req.files?.images?.map((file) => ({
+    url: file.path,
+    public_id: file.filename,
+  })) || [];
+   const thumbnail = req.files?.thumbnail?.[0]
+  ? {
+      url: req.files.thumbnail[0].path,
+      public_id: req.files.thumbnail[0].filename,
+    }
+  : null;
 
     const productData = {
       title,
@@ -136,6 +148,7 @@ const createProduct = async (req, res) => {
       discountPrice: Number(discountPrice),
       category,
       subCategory,
+      weight, // ✅ ADDED weight to the save object
       images,
       thumbnail,
       variants,
@@ -143,7 +156,7 @@ const createProduct = async (req, res) => {
       stock: Number(stock),
       isFeatured: isFeatured === "true",
       isBestSeller: isBestSeller === "true",
-      Eggless,
+      Eggless: Eggless === "true", // ✅ FIXED: Ensure this saves as a boolean!
       tags,
     };
 
@@ -155,12 +168,12 @@ const createProduct = async (req, res) => {
       success: true,
       product,
     });
-
   } catch (error) {
-    console.error("CREATE ERROR:", error); // 🔥 VERY IMPORTANT
+    console.error("CREATE ERROR:", error);
     res.status(500).json({ message: error.message });
   }
 };
+
 // ================= GET ALL =================
 const getAlldata = async (req, res) => {
   try {
@@ -170,7 +183,6 @@ const getAlldata = async (req, res) => {
       message: "data fetched successfully",
       data,
     });
-
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -185,56 +197,74 @@ const updateProduct = async (req, res) => {
 
     let updateData = { ...req.body };
 
-    // ✅ ADD HERE 👇
+    // Parse Arrays
     if (req.body.variants) {
-  updateData.variants = safeParse(req.body.variants);
-}
+      updateData.variants = safeParse(req.body.variants);
+    }
+    if (req.body.flavors) {
+      updateData.flavors = safeParse(req.body.flavors);
+    }
 
-if (req.body.flavors) {
-  updateData.flavors = safeParse(req.body.flavors);
-}
+    // ✅ FIXED: Parse Booleans properly for updates
+    if (req.body.isFeatured !== undefined) updateData.isFeatured = req.body.isFeatured === "true";
+    if (req.body.isBestSeller !== undefined) updateData.isBestSeller = req.body.isBestSeller === "true";
+    if (req.body.Eggless !== undefined) updateData.Eggless = req.body.Eggless === "true";
+
     // 🖼️ Handle images
     if (req.files?.images) {
-      updateData.images = req.files.images.map(file => file.path);
+      // Assuming you want the filename like in createProduct
+      updateData.images = req.files.images.map((file) => file.path);
     }
 
     if (req.files?.thumbnail) {
       updateData.thumbnail = req.files.thumbnail[0].path;
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      id,
-      updateData,
-      { new: true }
-    );
+    const updatedProduct = await Product.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
 
     res.status(200).json({
       message: "Updated successfully",
       product: updatedProduct,
     });
-
   } catch (error) {
+    console.error("UPDATE ERROR:", error);
     res.status(500).json({ message: "Server Error" });
   }
 };
 
 // ================= DELETE =================
+
+
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedProduct = await Product.findByIdAndDelete(id);
+    const product = await Product.findById(id);
 
-    if (!deletedProduct) {
+    if (!product) {
       return res.status(404).json({
         message: "Product not found",
       });
     }
 
-    res.status(200).json({
-      message: "Product deleted successfully",
-    });
+    // 🔥 Delete images from Cloudinary
+    for (let img of product.images) {
+      await cloudinary.uploader.destroy(img.public_id);
+    }
 
+    // 🔥 Delete thumbnail
+    if (product.thumbnail?.public_id) {
+      await cloudinary.uploader.destroy(product.thumbnail.public_id);
+    }
+
+    // Delete from DB
+    await Product.findByIdAndDelete(id);
+
+    res.status(200).json({
+      message: "Product & images deleted successfully",
+    });
   } catch (error) {
     console.error("Delete Error:", error);
     res.status(500).json({

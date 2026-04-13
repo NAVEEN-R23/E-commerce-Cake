@@ -7,6 +7,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require("express")
 const dotenv = require("dotenv");
+dotenv.config()
 const cors = require("cors")
 
 const connectDB = require("./config/db");
@@ -16,7 +17,6 @@ const authRouter = require("./routes/authRoutes");
 const customOrderRouter = require("./routes/customOrderRoutes");
 const wishlistRoute = require("./routes/wishlistRoutes");
 
-dotenv.config()
 const app = express()
 
 // app.use(cors())
