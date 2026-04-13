@@ -14,6 +14,8 @@ const connectDB = require("./config/db");
 const Router = require("./routes/productRoutes");
 const loginRouter = require("./routes/authRoutes");
 const authRouter = require("./routes/authRoutes");
+const customOrderRoutes = require("./routes/customOrderRoutes");
+
 
 const app = express()
 
@@ -29,6 +31,7 @@ connectDB()
 app.use("/products",Router)
 app.use("/api/auth",authRouter)
 app.use("/uploads", express.static("uploads"));
+app.use("/api", customOrderRoutes);
 
 const PORT = process.env.PORT
 app.listen(PORT,()=>{

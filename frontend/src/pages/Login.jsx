@@ -69,7 +69,7 @@ function Login() {
       const decoded = jwtDecode(token)
 
       if(decoded.role === "admin"){
-        navigate("/admin")
+        navigate("/addproduct")
       }else{
         navigate("/")
       }

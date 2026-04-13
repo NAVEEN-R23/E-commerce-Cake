@@ -78,7 +78,8 @@ const customOrderSchema = new mongoose.Schema(
 
     image: {
       type: String
-    }
+    },
+    public_id: String 
   },
   { timestamps: true }
 );

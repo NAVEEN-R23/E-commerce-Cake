@@ -17,6 +17,8 @@ import Register from './pages/Register';
 import AdminHome from './pages/Admin/AdminHome';
 import AdminProductForm from './pages/Admin/AddProduct';
 import AdminProducts from './pages/Admin/AdminProduct';
+import AdminLayout from './layouts/AdminLayout';
+import CustomOrderDetails from './pages/Admin/AdminCustomOrder';
 
 
 
@@ -48,9 +50,12 @@ function App() {
       </Route>
 
       {/* Admin */}
-      <Route path="/admin" element={<AdminHome />} />
-      <Route path="/addproduct" element={<AdminProductForm/>}/>
-      <Route path="/adminproducts" element={<AdminProducts/>}/>
+      <Route element={<AdminLayout/>}>
+        {/* <Route path="/admin" element={<AdminHome />} /> */}
+        <Route path='/customorder' element={<CustomOrderDetails/>}/>
+        <Route path="/addproduct" element={<AdminProductForm/>}/>
+        <Route path="/adminproducts" element={<AdminProducts/>}/>
+      </Route>
 
 
       </Routes>
