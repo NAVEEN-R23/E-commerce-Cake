@@ -26,29 +26,29 @@ const values = [
 
 const team = [
   {
-    name: "Angelica Russo",
+    name: "Angel",
     role: "Head Pastry Chef & Founder",
-    years: "15 years of craft",
+    years: "5 years of craft",
     initial: "A",
   },
   {
-    name: "Meera Nair",
-    role: "Cake Artist & Designer",
-    years: "8 years of craft",
-    initial: "M",
+    name: "Raghunandan",
+    role: "Cake Artist & Co Founder",
+    years: "3 years of craft",
+    initial: "R",
   },
   {
-    name: "Clara Dubois",
+    name: "Angel",
     role: "Custom Orders Specialist",
-    years: "10 years of craft",
-    initial: "C",
+    years: "50 years of craft",
+    initial: "a",
   },
 ];
 
 const stats = [
-  { number: "12+", label: "Years of Sweetness" },
-  { number: "8K+", label: "Cakes Delivered" },
-  { number: "500+", label: "Custom Designs" },
+  { number: "5+", label: "Years of Sweetness" },
+  { number: "2K+", label: "Cakes Delivered" },
+  { number: "50+", label: "Custom Designs" },
   { number: "99%", label: "Happy Smiles" },
 ];
 

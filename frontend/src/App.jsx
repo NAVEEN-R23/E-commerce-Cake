@@ -19,6 +19,8 @@ import AdminProductForm from './pages/Admin/AddProduct';
 import AdminProducts from './pages/Admin/AdminProduct';
 import AdminLayout from './layouts/AdminLayout';
 import CustomOrderDetails from './pages/Admin/AdminCustomOrder';
+import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart';
 
 
 
@@ -39,6 +41,8 @@ function App() {
         <Route path="/custom" element={<CustomOrders />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/wishlist" element={<Wishlist/>}/>
+        <Route path="/cart" element={<Cart/>}/>
         <Route path="/profile" element={<Profile />} />
         <Route path="/product/:id" element={<ProductDetail/>}/>
       </Route>
