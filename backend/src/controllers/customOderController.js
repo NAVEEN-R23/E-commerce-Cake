@@ -2,7 +2,6 @@ const customOrderSchema = require("../models/customOrderSchema")
 
 const createCustomOrder = async (req, res) => {
   try {
-
     const {
       name,
       phone,

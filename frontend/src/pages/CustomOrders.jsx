@@ -1,4 +1,4 @@
-import { useState , useRef} from "react";
+import { useState, useRef } from "react";
 
 function CustomOrder() {
 
@@ -10,7 +10,7 @@ function CustomOrder() {
     eventType: "",
     cakeType: "",
     cakeSize: "",
-    eggType: "",   
+    eggType: "",
     customSize: "",
     tierCount: "",
     flavor: "",
@@ -29,7 +29,7 @@ function CustomOrder() {
   const removeImage = () => {
     setImage(null);
     setPreview("");
-  
+
     if (fileInputRef.current) {
       fileInputRef.current.value = null;   // reset file input
     }
@@ -62,42 +62,73 @@ function CustomOrder() {
 
   const validateForm = () => {
 
-    if (!formData.name.trim()) return alert("Name is required");
+    if (!formData.name.trim()) {
+      alert("Name is required");
+      return false;
+    }
 
-    if (formData.phone.length !== 10)
-      return alert("Phone number must be 10 digits");
+    if (formData.phone.length !== 10) {
+      alert("Phone number must be 10 digits");
+      return false;
+    }
 
-    if (!formData.cakeType) return alert("Select cake type");
+    if (!formData.cakeType) {
+      alert("Select cake type");
+      return false;
+    }
 
-    if (!formData.cakeSize) return alert("Select cake size");
+    if (!formData.cakeSize) {
+      alert("Select cake size");
+      return false;
+    }
 
-    if (formData.cakeSize === "Custom" && !formData.customSize)
-      return alert("Enter custom cake size");
+    if (formData.cakeSize === "Custom" && !formData.customSize) {
+      alert("Enter custom cake size");
+      return false;
+    }
 
-    if (!formData.eggType)
-      return alert("Please select Egg or Eggless");
+    if (!formData.eggType) {
+      alert("Please select Egg or Eggless");
+      return false;
+    }
 
-    if (!formData.flavor) return alert("Select flavor");
+    if (!formData.flavor) {
+      alert("Select flavor");
+      return false;
+    }
 
-    if (formData.flavor === "Other" && !formData.customFlavor)
-      return alert("Enter custom flavor");
+    if (formData.flavor === "Other" && !formData.customFlavor) {
+      alert("Enter custom flavor");
+      return false;
+    }
 
-    if (!formData.shape) return alert("Select cake shape");
+    if (!formData.shape) {
+      alert("Select cake shape");
+      return false;
+    }
 
-    if (formData.shape === "Custom" && !formData.customShape)
-      return alert("Enter custom shape");
+    if (formData.shape === "Custom" && !formData.customShape) {
+      alert("Enter custom shape");
+      return false;
+    }
 
-    if (!formData.deliveryDate)
-      return alert("Select delivery date");
+    if (!formData.deliveryDate) {
+      alert("Select delivery date");
+      return false;
+    }
 
     const today = new Date().toISOString().split("T")[0];
 
-    if (formData.deliveryDate < today)
-      return alert("Delivery date cannot be in the past");
+    if (formData.deliveryDate < today) {
+      alert("Delivery date cannot be in the past");
+      return false;
+    }
 
-    if (!formData.address.trim())
-      return alert("Delivery address is required");
-    
+    if (!formData.address.trim()) {
+      alert("Delivery address is required");
+      return false;
+    }
+
     return true;
   };
 
@@ -124,6 +155,33 @@ function CustomOrder() {
 
       if (res.ok) {
         alert("Custom order submitted successfully!");
+
+        // ✅ Reset form
+        setFormData({
+          name: "",
+          phone: "",
+          eventType: "",
+          cakeType: "",
+          cakeSize: "",
+          eggType: "",
+          customSize: "",
+          tierCount: "",
+          flavor: "",
+          customFlavor: "",
+          shape: "",
+          customShape: "",
+          message: "",
+          deliveryDate: "",
+          address: "",
+          instructions: ""
+        });
+
+        setImage(null);
+        setPreview("");
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = null;
+        }
       }
 
     } catch (error) {
@@ -370,12 +428,12 @@ function CustomOrder() {
         </label>
 
         <input
-  type="file"
-  accept="image/*"
-  ref={fileInputRef}
-  onChange={handleImage}
-  className="w-full border p-2 rounded"
-/>
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          onChange={handleImage}
+          className="w-full border p-2 rounded"
+        />
 
         {preview && (
           <div className="mt-3">

@@ -1,8 +1,10 @@
-const express = required("express")
-const customOrderRouter = express.router()
+const express = require("express")
+const customOrderRouter = express.Router()
 
 const upload = require("../middleware/multer")
+const { createCustomOrder } = require("../controllers/customOderController")
 
-router.post("/custom-order", upload.single("image"), createCustomOrder)
+customOrderRouter.post("/custom-order", upload.single("image"), createCustomOrder)
 
 module.exports = customOrderRouter
+

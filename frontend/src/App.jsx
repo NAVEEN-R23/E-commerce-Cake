@@ -17,6 +17,8 @@ import Register from './pages/Register';
 import AdminHome from './pages/Admin/AdminHome';
 import AdminProductForm from './pages/Admin/AddProduct';
 import AdminProducts from './pages/Admin/AdminProduct';
+import Wishlist from './pages/Wishlist';
+import Cart from './pages/Cart';
 
 
 
@@ -37,7 +39,10 @@ function App() {
         <Route path="/custom" element={<CustomOrders />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/wishlist" element={<Wishlist/>}/>
+        <Route path="/cart" element={<Cart/>}/>
         <Route path="/profile" element={<Profile />} />
+        <Route path="/product/:id" element={<ProductDetail/>}/>
       </Route>
         
         {/* Pages WITHOUT Navbar */}
@@ -48,6 +53,8 @@ function App() {
 
       {/* Admin */}
       <Route path="/admin" element={<AdminHome />} />
+      <Route path="/addproduct" element={<AdminProductForm/>}/>
+      <Route path="/adminproducts" element={<AdminProducts/>}/>
 
 
       </Routes>

@@ -7,10 +7,12 @@ function Navbar() {
 
   const navigate = useNavigate();
   const location = useLocation()
+
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
   });
+
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -68,6 +70,7 @@ function Navbar() {
           >
             Angelic Cakes
           </h1>
+
           <p className="hidden md:block text-[10px] tracking-[4px] uppercase text-[#8B6914] mt-2 opacity-80">
             Baked with Love
           </p>
@@ -79,16 +82,22 @@ function Navbar() {
           <div className="hidden sm:flex items-center gap-3">
 
             {/* Wishlist */}
-            <div className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition">
+            <Link
+              to="/wishlist"
+              className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition"
+            >
               <FaHeart size={12} />
-            </div>
+            </Link>
 
             {/* Cart */}
-            <div className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition">
+            <Link
+              to="/cart"
+              className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition"
+            >
               <FaShoppingCart size={12} />
-            </div>
+            </Link>
 
-            {/* Login */}
+            {/* Login/Profile */}
             {user ? (
               <div
                 onClick={() => navigate("/profile")}
@@ -125,9 +134,10 @@ function Navbar() {
             key={link.name}
             to={link.path}
             className={({ isActive }) =>
-              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${isActive
-                ? "text-[#fde68a] border-[#fde68a]"
-                : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
+              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${
+                isActive
+                  ? "text-[#fde68a] border-[#fde68a]"
+                  : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
               }`
             }
           >
@@ -151,16 +161,38 @@ function Navbar() {
             </NavLink>
           ))}
 
+          {/* Mobile Wishlist + Cart */}
+          <div className="flex gap-4 pt-2">
+
+            <Link
+              to="/wishlist"
+              onClick={() => setMenuOpen(false)}
+              className="w-9 h-9 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a]"
+            >
+              <FaHeart size={14} />
+            </Link>
+
+            <Link
+              to="/cart"
+              onClick={() => setMenuOpen(false)}
+              className="w-9 h-9 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a]"
+            >
+              <FaShoppingCart size={14} />
+            </Link>
+
+          </div>
+
+          {/* Login/Profile */}
           {user ? (
             <div
-            onClick={() => {
-              navigate("/profile");
-              setMenuOpen(false);
-            }}
-            className="cursor-pointer w-9 h-9 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] font-semibold"
-          >
-            {user?.name?.charAt(0).toUpperCase()}
-          </div>
+              onClick={() => {
+                navigate("/profile");
+                setMenuOpen(false);
+              }}
+              className="cursor-pointer w-9 h-9 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] font-semibold"
+            >
+              {user?.name?.charAt(0).toUpperCase()}
+            </div>
           ) : (
             <Link
               to="/login"
