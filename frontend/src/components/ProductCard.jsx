@@ -1,77 +1,121 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaHeart, FaRegHeart, FaShoppingCart, FaArrowRight } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart, increaseQuantity } from "../redux/cartSlice";
+import { toggleWishlist } from "../redux/wishlistSlice";
+import axiosInstance from "../utils/axiosInstance";
+import { setCart } from "../redux/cartSlice";
+
 
 function ProductCard({ product }) {
-  const [inCart, setInCart] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // Added 'id' to the destructuring!
+  const cartItems = useSelector((state) => state.cart.items);
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+
   const { _id, thumbnail, title, description, price } = product;
 
-  const handleCartClick = (e) => {
-    e.preventDefault(); // Prevents the Link from triggering if they just want to add to cart
-    if (inCart) {
-      console.log("Navigating to Cart...");
-    } else {
-      setInCart(true);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const isInCart = (id) => { return cartItems?.some((item) => item.productId?._id === id) }
+  const isWishlisted = wishlistItems.some((item) => item._id === _id);
+
+  const handleCartClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user || !user?.id) {
+      alert("please login first");
+      return;
+    }
+    const alreadyInCart = isInCart(product._id);
+    if (alreadyInCart) {
+      navigate("/cart");
+      return;
+    }
+
+    try {
+      const res = await axiosInstance.post("/cart/add", {
+        userId: user.id,
+        productId: _id
+      });
+
+      console.log("CART ADD RESPONSE:", res.data);
+
+      // ✅ Fetch updated cart
+      const cartRes = await axiosInstance.get(`/cart/${user.id}`);
+      console.log("UPDATED CART:", cartRes.data);
+
+      dispatch(setCart(cartRes.data.items || []));
+
+    } catch (err) {
+      console.log("Cart API error:", err.response?.data || err.message);
+    }
+  };
+  const handleWishlistClick = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    dispatch(toggleWishlist(product));
+
+    try {
+      await axiosInstance.post("/wishlist/toggle", {
+        userId: user.id,
+        productId: _id
+      });
+    } catch (err) {
+      console.log("wishlist api error", err);
     }
   };
 
-  const handleWishlistClick = (e) => {
-    e.preventDefault(); // Prevents the Link from triggering when clicking the heart
-    setIsWishlisted(!isWishlisted);
-  };
+
 
   return (
-    <div className="relative w-full max-w-sm bg-[#2e1a06] border border-[#8B6914] rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-[#fde68a] hover:shadow-[0_0_15px_#fde68a30] group flex flex-col">
-      
-      {/* Link wrapping the top half of the card */}
-      <Link to={`/product/${_id}`} className="block flex-grow">
-        {/* Image Container */}
+    <div className="relative w-full max-w-sm bg-[#2e1a06] border border-[#8B6914] rounded-2xl overflow-hidden shadow-lg group flex flex-col">
+
+      <Link to={`/product/${_id}`} className="block grow">
+
         <div className="relative h-56 w-full overflow-hidden">
           <img
             src={thumbnail?.url}
             alt={title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 brightness-90 group-hover:brightness-100"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           />
-          
-          {/* Wishlist Heart Button */}
+
           <button
             onClick={handleWishlistClick}
-            className="absolute top-3 right-3 w-9 h-9 bg-[#2e1a06]/80 backdrop-blur-sm border border-[#8B6914] rounded-full flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] hover:shadow-[0_0_8px_#fde68a40] transition z-10"
+            className="absolute top-3 right-3 w-9 h-9 bg-[#2e1a06]/80 border border-[#8B6914] rounded-full flex items-center justify-center text-[#fde68a]"
           >
             {isWishlisted ? <FaHeart size={16} /> : <FaRegHeart size={16} />}
           </button>
         </div>
 
-        {/* Card Content (Title & Desc) */}
         <div className="p-5 pb-2 flex flex-col gap-3">
-          <div className="flex justify-between items-start gap-2">
-            <h3 className="text-[#fde68a] text-lg font-semibold tracking-wide leading-tight group-hover:underline decoration-[#8B6914] underline-offset-4">
+          <div className="flex justify-between">
+            <h3 className="text-[#fde68a] text-lg font-semibold">
               {title}
             </h3>
-            <span className="text-[#fde68a] font-bold text-lg whitespace-nowrap">
-             ₹ {price}
+            <span className="text-[#fde68a] font-bold">
+              ₹ {price}
             </span>
           </div>
-          <p className="text-[#8B6914] text-sm line-clamp-2 leading-relaxed">
+
+          <p className="text-[#8B6914] text-sm line-clamp-2">
             {description}
           </p>
         </div>
       </Link>
 
-      {/* Action Button (Kept outside the Link so it doesn't navigate to the product page) */}
       <div className="p-5 pt-2 mt-auto">
         <button
-          onClick={handleCartClick}
-          className={`mt-2 flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg font-medium tracking-wide transition-all duration-300 border ${
-            inCart
-              ? "bg-[#fde68a] border-[#fde68a] text-[#3b2207] hover:bg-[#e6c15c] hover:border-[#e6c15c]"
-              : "bg-[#4a2e10] border-[#8B6914] text-[#fde68a] hover:border-[#fde68a] hover:shadow-[0_0_10px_#fde68a50]"
-          }`}
+          onClick={(e) => handleCartClick(e, product)}
+          className={`w-full py-2.5 rounded-lg flex items-center justify-center gap-2 ${isInCart(product._id)
+            ? "bg-[#fde68a] text-[#3b2207]"
+            : "bg-[#4a2e10] text-[#fde68a]"
+            }`}
         >
-          {inCart ? (
+          {isInCart(product._id) ? (
             <>
               Go to Cart <FaArrowRight size={14} />
             </>
@@ -87,3 +131,4 @@ function ProductCard({ product }) {
 }
 
 export default ProductCard;
+

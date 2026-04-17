@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useLocation, Link, NavLink } from "react-router-dom";
 import { FaHeart, FaShoppingCart, FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import AClogo from "../assets/AC_logo.png";
+import { useSelector } from "react-redux";
 
 function Navbar() {
 
   const navigate = useNavigate();
-  const location = useLocation()
+  const location = useLocation();
+  const [searchterm, setsearchTerm] = useState("")
 
+  const cartItems = useSelector((state) => state.cart.items)
   const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -34,6 +37,22 @@ function Navbar() {
     { name: "Contact US", path: "/contact" },
   ];
 
+
+
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (searchterm.trim() === "") {
+        navigate("/"); // 🔥 go home
+      } else {
+        navigate(`/search?q=${searchterm}`);
+      }
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [searchterm]);
+
+
   return (
     <nav className="bg-[#3b2207] border-b border-[#8B6914]">
 
@@ -57,6 +76,8 @@ function Navbar() {
             <input
               type="text"
               placeholder="Search..."
+              value={searchterm}
+              onChange={(e) => setsearchTerm(e.target.value)}
               className="bg-transparent outline-none text-[#fde68a] placeholder-[#8B6914] text-xs md:text-sm w-24 md:w-36"
             />
           </div>
@@ -82,20 +103,15 @@ function Navbar() {
           <div className="hidden sm:flex items-center gap-3">
 
             {/* Wishlist */}
-            <Link
-              to="/wishlist"
-              className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition"
-            >
+            <div onClick={() => navigate("/wishlist")} className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition">
               <FaHeart size={12} />
-            </Link>
+            </div>
 
             {/* Cart */}
-            <Link
-              to="/cart"
-              className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition"
-            >
+            <div onClick={() => navigate("/cart")} className="relative cursor-pointer w-9 h-9 md:w-10 md:h-10 rounded-full bg-[#4a2e10] border border-[#8B6914] flex items-center justify-center text-[#fde68a] hover:border-[#fde68a] transition">
               <FaShoppingCart size={12} />
-            </Link>
+              {cartItems.length > 0 && (<span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1.5 py-[1px] rounded-full">{cartItems.length}</span>)}
+            </div>
 
             {/* Login/Profile */}
             {user ? (
@@ -134,10 +150,9 @@ function Navbar() {
             key={link.name}
             to={link.path}
             className={({ isActive }) =>
-              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${
-                isActive
-                  ? "text-[#fde68a] border-[#fde68a]"
-                  : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
+              `text-[11px] tracking-[2.5px] uppercase px-5 py-2.5 border-b-2 ${isActive
+                ? "text-[#fde68a] border-[#fde68a]"
+                : "text-[#8B6914] border-transparent hover:text-[#fde68a]"
               }`
             }
           >

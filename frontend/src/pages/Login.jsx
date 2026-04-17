@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";   
+import { Link, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode"
+import axiosInstance from "../utils/axiosInstance";
 
 function Login() {
 
-  const navigate = useNavigate();  
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -47,30 +48,25 @@ function Login() {
 
     try {
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+      const res = await axiosInstance.post("/api/auth/login",
         formData
       );
 
-      console.log("userdata :" , res.data.data);
-      console.log("token :" , res.data.token);
+      console.log("userdata :", res.data.data);
+      console.log("token :", res.data.token);
 
-      const user = {
-        name: res.data.data.name,
-        email: res.data.data.email
-      };
-      localStorage.setItem("user",JSON.stringify(user));
+      localStorage.setItem("user", JSON.stringify(res.data.data));
 
-      const token =  res.data.token
+      const token = res.data.token
       alert(res.data.message);
 
-      localStorage.setItem("token",token);
+      localStorage.setItem("token", token);
 
       const decoded = jwtDecode(token)
 
-      if(decoded.role === "admin"){
+      if (decoded.role === "admin") {
         navigate("/addproduct")
-      }else{
+      } else {
         navigate("/")
       }
 

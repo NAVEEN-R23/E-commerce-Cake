@@ -58,7 +58,7 @@
 
 //   return (
 //     <div className="bg-[beige] min-h-screen text-[#2e1a06] pb-16">
-      
+
 //       {/* ── 1. CAROUSEL BANNER ── */}
 //       <section className="relative w-full h-[50vh] md:h-[80vh] overflow-hidden">
 //         {slides.map((slide, index) => (
@@ -243,6 +243,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import CustomImage from "./images/bg1.png";
+import axiosInstance from "../utils/axiosInstance";
 
 /* ─── Floating particle dots for background ambiance ─── */
 const Particles = () => (
@@ -337,7 +338,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/products/getdata");
+        const res = await axiosInstance.get("/products/getdata");
         setProducts(res.data.data || []);
       } catch (error) {
         console.log("Error fetching products:", error);
