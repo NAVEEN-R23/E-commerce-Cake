@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { increaseQuantity, decreaseQuantity } from "../redux/cartSlice";
+import { increaseQuantity, decreaseQuantity, removeFromCart } from "../redux/cartSlice";
 import axiosInstance from "../utils/axiosInstance";
 import { useEffect } from "react";
 import { setCart } from "../redux/cartSlice";
