@@ -46,36 +46,71 @@ function Login() {
       return;
     }
 
-    try {
+  //   try {
 
-      const res = await axiosInstance.post("/api/auth/login",
-        formData
-      );
+  //     const res = await axiosInstance.post("/api/auth/login",
+  //       formData
+  //     );
 
-      console.log("userdata :", res.data.data);
-      console.log("token :", res.data.token);
+  //     console.log("userdata :", res.data.data);
+  //     console.log("token :", res.data.token);
+  //     console.log("LOGIN RESPONSE:", res.data);
 
-      localStorage.setItem("user", JSON.stringify(res.data.data));
+  //     localStorage.setItem("user", JSON.stringify(res.data.data));
 
-      const token = res.data.token
-      alert(res.data.message);
+  //     const token = res.data.token
+  //     alert(res.data.message);
 
-      localStorage.setItem("token", token);
+  //     localStorage.setItem("token", token);
 
-      const decoded = jwtDecode(token)
+  //     const decoded = jwtDecode(token)
 
-      if (decoded.role === "admin") {
-        navigate("/addproduct")
-      } else {
-        navigate("/")
-      }
+  //     if (decoded.role === "admin") {
+  //       navigate("/addproduct")
+  //     } else {
+  //       navigate("/")
+  //     }
 
-    } catch (error) {
+  //   } catch (error) {
 
-      alert(error.response?.data?.message || "Login Failed");
+  //     alert(error.response?.data?.message || "Login Failed");
 
-    }
-  };
+  //   }
+  // };
+
+  try {
+  const res = await axiosInstance.post("/api/auth/login", formData);
+
+  console.log("LOGIN RESPONSE:", res.data);
+   console.log("userdata :", res.data.data);
+  console.log("token :", res.data.token);
+
+  const token = res.data.token;
+  const user = res.data.data;
+
+  // 🔒 Safety check
+  if (!token) {
+    alert("Token not received");
+    return;
+  }
+
+  localStorage.setItem("user", JSON.stringify(user));
+  localStorage.setItem("token", token);
+
+  const decoded = jwtDecode(token);
+
+  alert(res.data.message);
+
+  if (decoded.role === "admin") {
+    navigate("/addproduct");
+  } else {
+    navigate("/");
+  }
+
+} catch (error) {
+  alert(error.response?.data?.message || "Login Failed");
+}
+        }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8f5f0]">

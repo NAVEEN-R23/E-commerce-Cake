@@ -37,11 +37,21 @@ const cartSlice = createSlice({
 
 
     decreaseQuantity: (state, action) => {
-      const item = state.items.find((i) => i._id === action.payload);
-      if (item && item.quantity > 1) {
-        item.quantity -= 1;
-      }
-    },
+  const item = state.items.find(
+    (i) => i.productId._id === action.payload
+  );
+
+  if (item) {
+    if (item.quantity > 1) {
+      item.quantity -= 1;
+    } else {
+      // 🔥 remove item when quantity = 1
+      state.items = state.items.filter(
+        (i) => i.productId._id !== action.payload
+      );
+    }
+  }
+},
 
 
     removeFromCart: (state, action) => {

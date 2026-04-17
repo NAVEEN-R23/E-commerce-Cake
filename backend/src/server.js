@@ -17,7 +17,7 @@ const authRouter = require("./routes/authRoutes");
 const cartRouter = require("./routes/addtoCartRoutes");
 const wishlistRouter = require("./routes/wishlistRoutes");
 const { chatHandler } = require("./controllers/claudeController");
-
+const addressRouter = require("./routes/addressRoutes")
 const app = express()
 
 // app.use(cors())
@@ -25,10 +25,11 @@ const app = express()
 //     origin:"http://localhost:5173 "
 // }))
 
-app.use(cors())
+
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cors())
 connectDB()
 
 app.use("/products", Router)
@@ -36,6 +37,7 @@ app.use("/api/auth", authRouter)
 app.use("/uploads", express.static("uploads"));
 app.use("/cart", cartRouter)
 app.use("/wishlist", wishlistRouter)
+app.use("/address", addressRouter);
 // for ai bot
 app.use("/api", chatHandler)
 

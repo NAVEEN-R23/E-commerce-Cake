@@ -70,20 +70,30 @@ const Addtocart = () => {
                                     </p>
 
                                     {/* 🔢 Quantity Controls */}
-                                    <div className="flex items-center gap-2 mt-2">
-                                        <button
-                                            type="button"
-                                            onClick={async () => {
-                                                dispatch(decreaseQuantity(item.productId._id));
+                                   <button
+                                        type="button"
+                                        onClick={async () => {
+                                            if ((item.quantity || 1) <= 1) {
+                                            // 🔥 Remove item completely
+                                            dispatch(removeFromCart(item.productId._id));
 
-                                                await axiosInstance.post("/cart/decrease", {
-                                                    userId: user.id,
-                                                    productId: item.productId._id,
-                                                });
-                                            }}
-                                            className="px-2 bg-[#fde68a] text-black rounded"
+                                            await axiosInstance.post("/cart/remove", {
+                                                userId: user.id,
+                                                productId: item.productId._id,
+                                            });
+                                            } else {
+                                            // Normal decrease
+                                            dispatch(decreaseQuantity(item.productId._id));
+
+                                            await axiosInstance.post("/cart/decrease", {
+                                                userId: user.id,
+                                                productId: item.productId._id,
+                                            });
+                                            }
+                                        }}
+                                        className="px-2 bg-[#fde68a] text-black rounded"
                                         >
-                                            -
+                                        -
                                         </button>
 
                                         <span>{item.quantity || 1}</span>
@@ -103,7 +113,6 @@ const Addtocart = () => {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
 
                             {/* Right */}
                             <div className="text-right">
