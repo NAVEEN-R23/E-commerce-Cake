@@ -209,7 +209,7 @@ const Desserts = () => {
               Flavor
             </h3>
             <div className="space-y-2">
-              {["Chocolate", "Vanilla", "Strawberry", "Red Velvet"].map((flavor) => (
+              {["Chocolate", "Vanilla", "Strawberry", "Red Velvet", "Raspberry"].map((flavor) => (
                 <label key={flavor} className="flex items-center gap-3 text-sm text-[#fde68a] cursor-pointer">
                   <input
                     type="radio"
@@ -234,15 +234,15 @@ const Desserts = () => {
             </h3>
             <input
               type="range"
-              min="50"
+              min="10"
               max="1000"
-              step="50"
+              step="10"
               value={priceRange}
               onChange={(e) => setPriceRange(Number(e.target.value))}
               className="w-full accent-[#fde68a] cursor-pointer"
             />
             <div className="flex justify-between text-xs text-[#8B6914] mt-1">
-              <span>₹50</span>
+              <span>₹10</span>
               <span>₹1000</span>
             </div>
           </div>

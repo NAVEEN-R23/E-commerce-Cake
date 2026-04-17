@@ -29,11 +29,10 @@ app.use(express.urlencoded({extended:true}))
 connectDB()
 
 app.use("/products",Router)
-app.use("/api/auth",authRouter)
-app.use("/api",customOrderRouter)   
+app.use("/api/auth",authRouter) 
 app.use("/uploads", express.static("uploads"));
 app.use("/api", customOrderRoutes);
-app.use("/wishlist", wishlistRoute)
+// app.use("/wishlist", wishlistRoute)
 
 const PORT = process.env.PORT
 app.listen(PORT,()=>{

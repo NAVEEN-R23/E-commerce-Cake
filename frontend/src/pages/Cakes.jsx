@@ -467,7 +467,7 @@ const Cakes = () => {
   const applyFiltersAndSort = () => {
     let updated = [...allProducts];
     if (selectedFlavor) updated = updated.filter((p) => p.flavors?.includes(selectedFlavor));
-    if (selectedWeight) updated = updated.filter((p) => p.variants?.some((v) => v.weight === selectedWeight));
+    if (selectedWeight) updated = updated.filter((p) => p.weight?.includes(selectedWeight));
     updated = updated.filter((p) => p.price <= priceRange);
     if (sortOrder === "price-asc") updated.sort((a, b) => a.price - b.price);
     else if (sortOrder === "price-desc") updated.sort((a, b) => b.price - a.price);
@@ -540,7 +540,7 @@ const Cakes = () => {
               Flavor
             </h3>
             <div className="space-y-2">
-              {["Chocolate", "Vanilla", "Strawberry"].map((flavor) => (
+              {["chocolate", "vanilla", "strawberry"].map((flavor) => (
                 <label key={flavor} className="flex items-center gap-3 text-sm text-[#fde68a] cursor-pointer">
                   <input
                     type="radio"
