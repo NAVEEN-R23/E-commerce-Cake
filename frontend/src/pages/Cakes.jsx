@@ -26,7 +26,7 @@
 
 //   return (
 //     <div className="bg-white min-h-screen py-10 px-4 md:px-10">
-      
+
 //       <h1
 //         className="text-4xl md:text-5xl text-[#8B6914] text-center mb-10"
 //         style={{ fontFamily: "Style Script" }}
@@ -432,6 +432,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
+import axiosInstance from "../utils/axiosInstance";
 
 const Cakes = () => {
   const [allProducts, setAllProducts] = useState([]);
@@ -455,7 +456,7 @@ const Cakes = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/products/getdata");
+      const res = await axiosInstance.get("/products/getdata");
       const cakes = res.data.data.filter((p) => p.category === "Cakes");
       setAllProducts(cakes);
       setFilteredProducts(cakes);
@@ -483,20 +484,19 @@ const Cakes = () => {
 
   return (
     <div className="bg-[beige] min-h-screen flex items-start relative">
-      
+
       {/* ── MOBILE OVERLAY BACKDROP ── */}
       {isMobileFiltersOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity"
           onClick={() => setIsMobileFiltersOpen(false)}
         />
       )}
 
       {/* ── SIDEBAR ── */}
-      <aside 
-        className={`fixed md:sticky top-0 left-0 h-screen w-64 shrink-0 bg-[#2e1a06] border-r border-[#8B6914] flex flex-col overflow-hidden z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${
-          isMobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      <aside
+        className={`fixed md:sticky top-0 left-0 h-screen w-64 shrink-0 bg-[#2e1a06] border-r border-[#8B6914] flex flex-col overflow-hidden z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isMobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* Header with Mobile Close Button */}
         <div className="px-6 py-5 border-b border-[#8B6914] shrink-0 flex justify-between items-center">
@@ -504,7 +504,7 @@ const Cakes = () => {
             Filters
           </h2>
           {/* Close button - visible only on mobile */}
-          <button 
+          <button
             className="md:hidden text-[#fde68a] hover:text-white"
             onClick={() => setIsMobileFiltersOpen(false)}
           >
@@ -616,10 +616,10 @@ const Cakes = () => {
 
       {/* ── MAIN CONTENT ── */}
       <main className="flex-1 py-6 px-6 md:py-10 md:px-10 w-full min-w-0">
-        
+
         {/* MOBILE TOP BAR (Contains Filter Button positioned to Top Right) */}
         <div className="md:hidden flex justify-end mb-4">
-          <button 
+          <button
             onClick={() => setIsMobileFiltersOpen(true)}
             className="flex items-center gap-2 bg-[#2e1a06] text-[#fde68a] border border-[#8B6914] px-4 py-2 rounded-lg text-sm font-semibold tracking-wide shadow-md"
           >

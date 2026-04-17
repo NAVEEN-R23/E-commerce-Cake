@@ -1,91 +1,39 @@
-const wishlistData = require("../models/wishlistSchema")
+const Wishlist = require("../models/wishlistSchema")
 
-// Add to wishlist
-const addWishlist = async (req, res) => {
+
+const togglewishlist = async (req, res) => {
     try {
-
-        const { userId, productId } = req.body
-
-        // check already exists
-        const existing = await wishlistData.findOne({ userId, productId })
-
-        if (existing) {
-            return res.status(400).json({
-                message: "Product already in wishlist"
-            })
+        const { userid, product } = req.body;
+        let wishlist = await Wishlist.findOne({ userid })
+        if (!wishlist) { wishlist = new wishlist({ userid, products: [] }) }
+        const exists = wishlist.items.find((item) => item.productId.toString() === productId);
+        if (!exists) {
+            wishlist.items.push({ productId })
         }
-
-        const data = await wishlistData.create({
-            userId,
-            productId
-        })
-
-        res.status(201).json({
-            message: "Added to wishlist",
-            data
-        })
+        await wishlist.save();
+        res.json(wishlist)
 
     } catch (error) {
-
         res.status(500).json({
-            message: error.message
+            message: "internal server error",
+            error: error.message
         })
-
     }
 }
 
-
-// Get wishlist of user
-const getWishlist = async (req, res) => {
-
+const getwishlist = async (req, res) => {
     try {
-
-        const { userId } = req.params
-
-        const data = await wishlistData
-            .find({ userId })
-            .populate("productId")
-
-        res.status(200).json({
-            message: "Wishlist fetched",
-            data
-        })
+        const wishlist = await Wishlist.findOne({ userid: req.params.userid }).populate("items.productId")
+        if (!wishlist) { return res.status(400).json({ message: "client side error" }) }
+        res.json(wishlist)
 
     } catch (error) {
-
         res.status(500).json({
-            message: error.message
+            message: "internal server error",
+            error: error.message
         })
 
     }
 }
 
-
-// Remove from wishlist
-const removeWishlist = async (req, res) => {
-
-    try {
-
-        const { userId, productId } = req.body
-
-        await wishlistData.findOneAndDelete({ userId, productId })
-
-        res.status(200).json({
-            message: "Removed from wishlist"
-        })
-
-    } catch (error) {
-
-        res.status(500).json({
-            message: error.message
-        })
-
-    }
-
-}
-
-module.exports = {
-    addWishlist,
-    getWishlist,
-    removeWishlist
-}
+module.exports = { togglewishlist, getwishlist }

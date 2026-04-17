@@ -6,20 +6,23 @@ const { verifyToken } = require("../utils/loginToken")
 
 const authRouter = express.Router()
 
-authRouter.post("/register",register)
-authRouter.post("/login",login)
+authRouter.post("/register", register)
+authRouter.post("/login", (req, res, next) => {
+
+  next()
+}, login)
 
 // 🔹 Admin protected route
 authRouter.get(
-    "/admin",
-    verifyToken,
-    checkRole("admin"),
-    (req, res) => {
-      res.json({
-        message: "Welcome Admin",
-        user: req.user
-      })
-    }
-  )
+  "/admin",
+  verifyToken,
+  checkRole("admin"),
+  (req, res) => {
+    res.json({
+      message: "Welcome Admin",
+      user: req.user
+    })
+  }
+)
 
 module.exports = authRouter

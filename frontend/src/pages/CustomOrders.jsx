@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import axiosInstance from "../utils/axiosInstance";
 
 function CustomOrder() {
 
@@ -148,8 +149,7 @@ function CustomOrder() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/custom-order", {
-        method: "POST",
+      const res = await axiosInstance.post("/api/custom-order", {
         body: data
       });
 

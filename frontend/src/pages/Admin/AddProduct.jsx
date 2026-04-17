@@ -1,5 +1,6 @@
 import { useState } from "react";
 import bgImage from "../images/bg1.png";
+import axiosInstance from "../../utils/axiosInstance";
 
 function AdminProductForm() {
   const [formData, setFormData] = useState({
@@ -54,18 +55,17 @@ function AdminProductForm() {
 
     data.append("thumbnail", thumbnail);
 
-   const res = await fetch("http://localhost:5000/products/createdata", {
-  method: "POST",
-  body: data,
-});
+    const res = await axiosInstance.post("/products/createdata", {
+      body: data,
+    });
 
-const result = await res.json();
+    const result = await res.json();
 
-if (res.ok) {
-  alert("Product created successfully!");
-} else {
-  alert(result.message || "Error creating product");
-}
+    if (res.ok) {
+      alert("Product created successfully!");
+    } else {
+      alert(result.message || "Error creating product");
+    }
   };
 
   return (
@@ -112,7 +112,7 @@ if (res.ok) {
         {/* Image Upload */}
         <div>
           <label>Upload Images</label>
-         <input type="file" multiple accept="image/*" onChange={(e) => setImages(Array.from(e.target.files))} />
+          <input type="file" multiple accept="image/*" onChange={(e) => setImages(Array.from(e.target.files))} />
         </div>
 
         {/* Thumbnail */}
