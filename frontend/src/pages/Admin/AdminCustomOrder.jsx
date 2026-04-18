@@ -144,9 +144,9 @@ function CustomOrderDetails() {
 
   const fetchOrders = async () => {
     try {
-      const res = await axiosInstance.get("/api/getdata");
-      const data = await res.json();
-      setOrders(data.data);
+      const res = await axiosInstance.get("/customize/getdata");
+      setOrders(res.data.data); // ✅ correct
+      // setOrders(data.data);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -162,7 +162,7 @@ function CustomOrderDetails() {
     if (!window.confirm("Mark this order as completed?")) return;
 
     try {
-      await axiosInstance.delete(`/api/delete/${id}`);
+      await axiosInstance.delete(`/customize/deletedata/${id}`);
 
       fetchOrders();
     } catch (error) {

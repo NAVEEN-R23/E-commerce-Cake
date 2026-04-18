@@ -20,6 +20,9 @@ import AdminProducts from './pages/Admin/AdminProduct';
 import Addtocart from './pages/Addtocart';
 import Search from './pages/Search';
 import Wishlist from './pages/wishlist';
+import AdminLayout from './layouts/AdminLayout';
+import AdminOrder from './pages/Admin/AdminOrder';
+import CustomOrderDetails from './pages/Admin/AdminCustomOrder';
 
 
 
@@ -53,10 +56,13 @@ function App() {
         </Route>
 
         {/* Admin */}
-        <Route path="/admin" element={<AdminHome />} />
+        <Route element={<AdminLayout/>}>
+        {/* <Route path="/admin" element={<AdminHome />} /> */}
         <Route path="/addproduct" element={<AdminProductForm />} />
+        <Route path="/customorder" element={<CustomOrderDetails/>}/>
+        <Route path="/orders" element={<AdminOrder/>}/>
         <Route path="/adminproducts" element={<AdminProducts />} />
-
+        </Route>
 
       </Routes>
 

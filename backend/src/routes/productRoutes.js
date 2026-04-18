@@ -1,5 +1,5 @@
 const express = require("express")
-const { createProduct, getAlldata, deleteProduct, updateProduct } = require("../controllers/productController");
+const { createProduct, getAlldata, deleteProduct, updateProduct, searchProducts } = require("../controllers/productController");
 const upload = require("../middleware/multer");
 
 const Router = express.Router()
@@ -25,6 +25,9 @@ Router.put(
 );
 //delete
 Router.delete("/delete/:id", deleteProduct);
+
+//searchProducts
+Router.get("/search", searchProducts);
 
 
 module.exports = Router
