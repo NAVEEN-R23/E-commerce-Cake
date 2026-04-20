@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import cartReducer from "./cartSlice";
-import wishlistReducer from "./wishlistSlice"
+import wishlistReducer from "./wishlistSlice";
+import aiReducer from "./aiSlice";
 
 
 export const store = configureStore({
     reducer: {
         cart: cartReducer,
-        wishlist: wishlistReducer
+        wishlist: wishlistReducer,
+        ai:aiReducer
     }
 });
 store.subscribe(() => {

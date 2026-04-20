@@ -244,6 +244,10 @@ import axios from "axios";
 import ProductCard from "../components/ProductCard";
 import CustomImage from "./images/bg1.png";
 import axiosInstance from "../utils/axiosInstance";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { clearAiproducts } from "../redux/aiSlice";
+
+
 
 /* ─── Floating particle dots for background ambiance ─── */
 const Particles = () => (
@@ -294,6 +298,14 @@ const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroLoaded, setHeroLoaded] = useState(false);
   const timerRef = useRef(null);
+  const dispatch = useDispatch();
+  const aiProducts = useSelector((state) => state.ai.products);
+  console.log("HOME AI PRODUCTS:", aiProducts);
+  const safeProducts = aiProducts || [];
+  console.log("SAFE PRODUCTS LENGTH:", safeProducts.length)
+
+
+
 
   const slides = [
     {
@@ -467,6 +479,29 @@ const Home = () => {
         style={{ background: "linear-gradient(160deg, #fdf6e3 0%, #f5e6c8 60%, #ede0c4 100%)" }}
       >
         <Particles />
+
+        {/* aiproducts */}
+
+
+        {safeProducts.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 md:px-10 pt-6 relative z-20">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold">Voice search results</h2>
+              <button
+                onClick={() => dispatch(clearAiproducts())}
+                className="px-4 py-2 bg-black text-white rounded-lg text-sm"
+              >
+                clear
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {safeProducts.map((p) => (<ProductCard key={p.id} product={{ ...p, name: p.title, image: p.thumbnail }} />
+
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* ── 1. HERO CAROUSEL ── */}
         <section className="relative w-full h-[60vh] md:h-screen overflow-hidden">

@@ -236,9 +236,9 @@ const createProduct = async (req, res) => {
 
     const thumbnail = req.files?.thumbnail?.[0]
       ? {
-          url: req.files.thumbnail[0].path,
-          public_id: req.files.thumbnail[0].filename,
-        }
+        url: req.files.thumbnail[0].path,
+        public_id: req.files.thumbnail[0].filename,
+      }
       : null;
 
     const productData = {
@@ -304,7 +304,7 @@ const searchProducts = async (req, res) => {
         { description: { $regex: query, $options: "i" } },
         { category: { $regex: query, $options: "i" } },
         { subCategory: { $regex: query, $options: "i" } },
-        { tags: { $regex: query, $options: "i" } },
+        { tags: { $elemMatch: { $regex: query, $options: "i" } } },
       ],
     });
 
