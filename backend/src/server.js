@@ -19,6 +19,7 @@ const wishlistRouter = require("./routes/wishlistRoutes");
 const { chatHandler } = require("./controllers/claudeController");
 const addressRouter = require("./routes/addressRoutes");
 const customOrderRouter = require("./routes/customOrderRoutes");
+const router = require("./routes/orderRoutes");
 const app = express()
 
 // app.use(cors())
@@ -39,7 +40,8 @@ app.use("/uploads", express.static("uploads"));
 app.use("/cart", cartRouter)
 app.use("/wishlist", wishlistRouter)
 app.use("/address", addressRouter);
-app.use("/customize",customOrderRouter)   
+app.use("/customize",customOrderRouter)
+app.use("/order",router)   
 // for ai bot
 app.use("/api", chatHandler)
 

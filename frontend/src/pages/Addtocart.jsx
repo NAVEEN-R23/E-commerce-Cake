@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { increaseQuantity, decreaseQuantity, removeFromCart } from "../redux/cartSlice";
 import axiosInstance from "../utils/axiosInstance";
@@ -6,6 +7,7 @@ import { useEffect } from "react";
 import { setCart } from "../redux/cartSlice";
 
 const Addtocart = () => {
+    const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
     const cartItems = useSelector((state) => state.cart.items);
     const dispatch = useDispatch();
@@ -156,7 +158,10 @@ const Addtocart = () => {
                     </div>
 
                     {/* 🛒 Checkout Button */}
-                    <button className="mt-4 bg-[#fde68a] text-[#3b2207] py-3 rounded-lg font-semibold hover:opacity-90">
+                    <button
+                        onClick={() => navigate("/checkout")}
+                        className="mt-4 bg-[#fde68a] text-[#3b2207] py-3 rounded-lg font-semibold hover:opacity-90"
+                    >
                         Proceed to Checkout
                     </button>
 
