@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Address from "./Address";
+import UserOrders from "./UserOrders";
 
 const Profile = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -83,7 +84,10 @@ const Profile = () => {
         )}
 
         {activeTab === "orders" && (
-          <h2 className="text-xl font-bold">📦 Orders (Coming Soon)</h2>
+          <>
+            <h2 className="text-xl font-bold mb-4">📦 My Orders</h2>
+            <UserOrders />
+          </>
         )}
 
         {activeTab === "address" && <Address />}

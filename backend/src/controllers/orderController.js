@@ -58,9 +58,22 @@ const getAllOrders = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// ✅ GET USER ORDERS
+const getUserOrders = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 module.exports={
     placeOrder,
     getAllOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    getUserOrders
 }
