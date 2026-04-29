@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cartSlice";
 import {
   FaShoppingCart,
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa";
+import axiosInstance from "../utils/axiosInstance";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -15,16 +17,15 @@ const ProductDetail = () => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [inCart, setInCart] = useState(false);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const dispatch = useDispatch();
 
-useEffect(() => {
-  fetchProduct();
-  window.scrollTo(0, 0); // 🔥 smooth UX
-}, [id]);
+  useEffect(() => {
+    fetchProduct();
+    window.scrollTo(0, 0); // 🔥 smooth UX
+  }, [id]);
   const fetchProduct = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:5000/products/getdata`
-      );
+      const res = await axiosInstance.get("/products/getdata");
 
       const allProducts = res.data.data;
       const found = allProducts.find((p) => p._id === id);
@@ -50,6 +51,20 @@ useEffect(() => {
         Loading...
       </div>
     );
+  }
+  const handlecart = async () => {
+    try {
+      dispatch(addToCart(product))
+      await axiosInstance.post("/cart/add", {
+        userId: user._id,
+        productId: product._id,
+      })
+      navigate("/cart")
+
+    } catch (err) {
+      console.log(err)
+    }
+
   }
 
   return (
@@ -87,9 +102,8 @@ useEffect(() => {
                   src={img?.url}
                   alt="thumbnail"
                   onClick={() => setMainImage(img?.url)}
-                  className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${
-                    mainImage === img?.url ? "border-[#8B6914]" : "border-gray-200"
-                  }`}
+                  className={`w-20 h-20 object-cover rounded cursor-pointer border-2 ${mainImage === img?.url ? "border-[#8B6914]" : "border-gray-200"
+                    }`}
                 />
               ))}
             </div>
@@ -136,7 +150,7 @@ useEffect(() => {
                   {product.weight}
                 </span>
               )}
-              
+
               {product.Eggless && (
                 <span className="inline-block bg-green-100 text-green-700 px-4 py-1 text-sm rounded-full font-semibold shadow-sm border border-green-300">
                   Eggless
@@ -147,7 +161,7 @@ useEffect(() => {
             <p className="mt-4 text-gray-600">
               {product.shortDescription}
             </p>
-            
+
             {/* Variants */}
             {product.variants?.length > 0 && (
               <div className="mt-6">
@@ -157,11 +171,10 @@ useEffect(() => {
                     <button
                       key={i}
                       onClick={() => setSelectedVariant(v)}
-                      className={`px-4 py-2 rounded-full border transition ${
-                        selectedVariant?.weight === v.weight
-                          ? "bg-[#8B6914] text-white"
-                          : "hover:border-[#8B6914]"
-                      }`}
+                      className={`px-4 py-2 rounded-full border transition ${selectedVariant?.weight === v.weight
+                        ? "bg-[#8B6914] text-white"
+                        : "hover:border-[#8B6914]"
+                        }`}
                     >
                       {v.weight}
                     </button>
@@ -193,7 +206,7 @@ useEffect(() => {
 
             {/* Button */}
             <button
-              onClick={() => setInCart(true)}
+              onClick={() => handlecart()}
               className="mt-8 w-full py-3 bg-[#3b2207] hover:bg-[#8B6914] text-white rounded-lg flex justify-center items-center gap-2 transition"
             >
               {inCart ? (

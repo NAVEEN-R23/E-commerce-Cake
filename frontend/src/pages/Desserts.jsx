@@ -26,7 +26,7 @@
 
 //   return (
 //     <div className="bg-white min-h-screen py-10 px-4 md:px-10">
-      
+
 //       <h1
 //         className="text-4xl md:text-5xl text-[#8B6914] text-center mb-10"
 //         style={{ fontFamily: "Style Script" }}
@@ -61,6 +61,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "../components/ProductCard";
+import axiosInstance from "../utils/axiosInstance";
 
 const Desserts = () => {
   const [allProducts, setAllProducts] = useState([]);
@@ -85,7 +86,7 @@ const Desserts = () => {
 
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/products/getdata");
+      const res = await axiosInstance.get("/products/getdata");
       // Filter for Desserts category
       const desserts = res.data.data.filter((p) => p.category === "Desserts");
       setAllProducts(desserts);
@@ -128,27 +129,26 @@ const Desserts = () => {
   return (
     // Replaced bg-white with bg-[beige] to keep consistent with the Cakes page theme
     <div className="bg-[beige] min-h-screen flex items-start relative">
-      
+
       {/* ── MOBILE OVERLAY BACKDROP ── */}
       {isMobileFiltersOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/60 z-40 md:hidden transition-opacity"
           onClick={() => setIsMobileFiltersOpen(false)}
         />
       )}
 
       {/* ── SIDEBAR ── */}
-      <aside 
-        className={`fixed md:sticky top-0 left-0 h-screen w-64 shrink-0 bg-[#2e1a06] border-r border-[#8B6914] flex flex-col overflow-hidden z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${
-          isMobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+      <aside
+        className={`fixed md:sticky top-0 left-0 h-screen w-64 shrink-0 bg-[#2e1a06] border-r border-[#8B6914] flex flex-col overflow-hidden z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isMobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         {/* Header with Mobile Close Button */}
         <div className="px-6 py-5 border-b border-[#8B6914] shrink-0 flex justify-between items-center">
           <h2 className="text-xl font-bold text-[#fde68a] uppercase tracking-widest">
             Filters
           </h2>
-          <button 
+          <button
             className="md:hidden text-[#fde68a] hover:text-white"
             onClick={() => setIsMobileFiltersOpen(false)}
           >
@@ -160,7 +160,7 @@ const Desserts = () => {
 
         {/* Scrollable filter body */}
         <div className="flex-1 px-6 py-6 space-y-6 overflow-y-auto scrollbar-hide">
-          
+
           {/* Sort By */}
           <div>
             <h3 className="text-xs font-semibold mb-3 text-[#8B6914] uppercase tracking-widest">
@@ -209,7 +209,7 @@ const Desserts = () => {
               Flavor
             </h3>
             <div className="space-y-2">
-              {["Chocolate", "Vanilla", "Strawberry", "Red Velvet"].map((flavor) => (
+              {["Chocolate", "Vanilla", "Strawberry", "Red Velvet", "Raspberry"].map((flavor) => (
                 <label key={flavor} className="flex items-center gap-3 text-sm text-[#fde68a] cursor-pointer">
                   <input
                     type="radio"
@@ -234,15 +234,15 @@ const Desserts = () => {
             </h3>
             <input
               type="range"
-              min="50"
+              min="10"
               max="1000"
-              step="50"
+              step="10"
               value={priceRange}
               onChange={(e) => setPriceRange(Number(e.target.value))}
               className="w-full accent-[#fde68a] cursor-pointer"
             />
             <div className="flex justify-between text-xs text-[#8B6914] mt-1">
-              <span>₹50</span>
+              <span>₹10</span>
               <span>₹1000</span>
             </div>
           </div>
@@ -261,10 +261,10 @@ const Desserts = () => {
 
       {/* ── MAIN CONTENT ── */}
       <main className="flex-1 py-6 px-6 md:py-10 md:px-10 w-full min-w-0">
-        
+
         {/* MOBILE TOP BAR (Filter Button) */}
         <div className="md:hidden flex justify-end mb-4">
-          <button 
+          <button
             onClick={() => setIsMobileFiltersOpen(true)}
             className="flex items-center gap-2 bg-[#2e1a06] text-[#fde68a] border border-[#8B6914] px-4 py-2 rounded-lg text-sm font-semibold tracking-wide shadow-md"
           >

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import bgImage from "../images/bg1.png";
+import axiosInstance from "../../utils/axiosInstance";
 
 function AdminProductForm() {
   const [formData, setFormData] = useState({
@@ -30,8 +31,9 @@ function AdminProductForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
+  try {
     const data = new FormData();
 
     Object.keys(formData).forEach((key) => {
@@ -40,7 +42,7 @@ function AdminProductForm() {
       }
     });
 
-    // ✅ FIX flavors
+    // ✅ flavors array
     const flavorsArray = formData.flavors
       ? formData.flavors.split(",").map((f) => f.trim())
       : [];
@@ -48,25 +50,33 @@ function AdminProductForm() {
     data.append("flavors", JSON.stringify(flavorsArray));
 
     // images
-    for (let i = 0; i < images.length; i++) {
-      data.append("images", images[i]);
+    images.forEach((img) => data.append("images", img));
+
+    if (thumbnail) {
+      data.append("thumbnail", thumbnail);
     }
 
-    data.append("thumbnail", thumbnail);
+    // 🔥 DEBUG
+    for (let pair of data.entries()) {
+      console.log(pair[0], pair[1]);
+    }
 
-   const res = await fetch("http://localhost:5000/products/createdata", {
-  method: "POST",
-  body: data,
-});
+    const res = await axiosInstance.post(
+      "/products/createdata",
+      data,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
-const result = await res.json();
-
-if (res.ok) {
-  alert("Product created successfully!");
-} else {
-  alert(result.message || "Error creating product");
-}
-  };
+    alert("Product created successfully!");
+  } catch (err) {
+    console.log(err.response?.data || err.message);
+    alert("Error creating product");
+  }
+};
 
   return (
     <div
@@ -112,7 +122,7 @@ if (res.ok) {
         {/* Image Upload */}
         <div>
           <label>Upload Images</label>
-         <input type="file" multiple accept="image/*" onChange={(e) => setImages(Array.from(e.target.files))} />
+          <input type="file" multiple accept="image/*" onChange={(e) => setImages(Array.from(e.target.files))} />
         </div>
 
         {/* Thumbnail */}

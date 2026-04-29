@@ -6,7 +6,7 @@ function AdminNavbar() {
 
   const navLinks = [
     { name: "Add Product", path: "addproduct" },
-    { name: "Admin Products", path: "/Adminproducts" },
+    { name: "Admin Products", path: "/adminproducts" },
     { name: "Order Details", path: "/orders" },
     { name: "CustomOrders", path:"/customorder"}
   ];

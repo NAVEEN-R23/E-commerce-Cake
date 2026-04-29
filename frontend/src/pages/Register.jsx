@@ -2,6 +2,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "../utils/axiosInstance";
 
 function Register() {
 
@@ -97,8 +98,7 @@ function Register() {
       // remove confirmPassword before sending
       const { confirmPassword, ...dataToSend } = formData;
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+      const res = await axiosInstance.post("/api/auth/register",
         dataToSend
       );
 

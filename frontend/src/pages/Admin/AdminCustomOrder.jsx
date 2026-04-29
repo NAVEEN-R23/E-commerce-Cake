@@ -135,6 +135,7 @@
 
 // export default CustomOrderDetails;
 import { useEffect, useState } from "react";
+import axiosInstance from "../../utils/axiosInstance";
 
 function CustomOrderDetails() {
   const [orders, setOrders] = useState([]);
@@ -143,9 +144,9 @@ function CustomOrderDetails() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/getdata");
-      const data = await res.json();
-      setOrders(data.data);
+      const res = await axiosInstance.get("/customize/getdata");
+      setOrders(res.data.data); // ✅ correct
+      // setOrders(data.data);
       setLoading(false);
     } catch (error) {
       console.error(error);
@@ -161,9 +162,7 @@ function CustomOrderDetails() {
     if (!window.confirm("Mark this order as completed?")) return;
 
     try {
-      await fetch(`http://localhost:5000/api/delete/${id}`, {
-        method: "DELETE",
-      });
+      await axiosInstance.delete(`/customize/deletedata/${id}`);
 
       fetchOrders();
     } catch (error) {
@@ -216,11 +215,11 @@ function CustomOrderDetails() {
                     {order.cakeType} ({order.cakeSize})
                   </td>
                   <td>{order.flavor}</td>
-                   <td>
-    {order.shape === "Custom"
-      ? order.customShape || "Custom"
-      : order.shape}
-  </td>
+                  <td>
+                    {order.shape === "Custom"
+                      ? order.customShape || "Custom"
+                      : order.shape}
+                  </td>
                   <td>
                     {order.deliveryDate
                       ? new Date(order.deliveryDate).toLocaleDateString()

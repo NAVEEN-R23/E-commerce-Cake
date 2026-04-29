@@ -17,11 +17,14 @@ import Register from './pages/Register';
 import AdminHome from './pages/Admin/AdminHome';
 import AdminProductForm from './pages/Admin/AddProduct';
 import AdminProducts from './pages/Admin/AdminProduct';
+import Addtocart from './pages/Addtocart';
+import Search from './pages/Search';
+import Wishlist from './pages/wishlist';
 import AdminLayout from './layouts/AdminLayout';
+import AdminOrder from './pages/Admin/AdminOrder';
 import CustomOrderDetails from './pages/Admin/AdminCustomOrder';
-import Wishlist from './pages/Wishlist';
-import Cart from './pages/Cart';
-
+import Checkout from './pages/Checkout';
+import Success from './pages/Success';
 
 
 
@@ -31,39 +34,42 @@ function App() {
   return (
     <>
 
-   
+
       <Routes>
         {/* Pages WITH Navbar */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/cakes" element={<Cakes />} />
-        <Route path="/desserts" element={<Desserts />} />
-        <Route path="/custom" element={<CustomOrders />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/wishlist" element={<Wishlist/>}/>
-        <Route path="/cart" element={<Cart/>}/>
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/product/:id" element={<ProductDetail/>}/>
-      </Route>
-        
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/cakes" element={<Cakes />} />
+          <Route path="/desserts" element={<Desserts />} />
+          <Route path="/custom" element={<CustomOrders />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/cart" element={<Addtocart />} />
+          <Route path="/checkout" element={<Checkout />} />
+           <Route path="/success" element={<Success />} />
+          <Route path="/wishlist" element={<Wishlist/>} />
+          <Route path="/search" element={<Search />} />
+        </Route>
+
         {/* Pages WITHOUT Navbar */}
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
-      {/* Admin */}
-      <Route element={<AdminLayout/>}>
+        {/* Admin */}
+        <Route element={<AdminLayout/>}>
         {/* <Route path="/admin" element={<AdminHome />} /> */}
-        <Route path='/customorder' element={<CustomOrderDetails/>}/>
-        <Route path="/addproduct" element={<AdminProductForm/>}/>
-        <Route path="/adminproducts" element={<AdminProducts/>}/>
-      </Route>
-
+        <Route path="/addproduct" element={<AdminProductForm />} />
+        <Route path="/customorder" element={<CustomOrderDetails/>}/>
+        <Route path="/orders" element={<AdminOrder/>}/>
+        <Route path="/adminproducts" element={<AdminProducts />} />
+        </Route>
 
       </Routes>
-      
+
     </>
   )
 }

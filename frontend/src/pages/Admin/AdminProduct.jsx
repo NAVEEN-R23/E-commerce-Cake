@@ -26,7 +26,7 @@
 //   // 🗑️ Delete Product
 //   const handleDelete = async (id) => {
 //     try {
-//       await axios.delete(`http://localhost:5000/products/delete/${id}`);
+//       await axios.delete(`http://localhost:/products/delete/${id}`);
 //       fetchProducts();
 //       alert("Product deleted");
 //     } catch (err) {
@@ -109,7 +109,7 @@
 
 //       <div className="overflow-x-auto">
 //         <table className="w-full border border-[#8B6914]">
-          
+
 //           <thead className="bg-[#4a2e10]">
 //             <tr>
 //               <th className="p-2 border">Image</th>
@@ -168,7 +168,7 @@
 //     {/* ✏️ Edit Modal */}
 //     {showModal && editData && (
 //       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-        
+
 //         <div className="bg-[#4a2e10] p-6 rounded w-96 border border-[#8B6914] shadow-lg">
 //           <h2 className="text-xl mb-4 font-bold">Edit Product</h2>
 
@@ -241,6 +241,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -252,7 +253,7 @@ const AdminProducts = () => {
   // 🔄 Fetch Products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/products/getdata");
+      const res = await axiosInstance.get("/products/getdata");
       setProducts(res.data.data);
       setFiltered(res.data.data);
     } catch (err) {
@@ -271,7 +272,7 @@ const AdminProducts = () => {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:5000/products/delete/${id}`);
+      await axiosInstance.delete(`/products/delete/${id}`);
       alert("Product deleted ✅");
       fetchProducts();
     } catch (err) {
@@ -298,8 +299,7 @@ const AdminProducts = () => {
   // 🔄 Update Product
   const handleUpdate = async () => {
     try {
-      await axios.put(
-        `http://localhost:5000/products/update/${editData._id}`,
+      await axiosInstance.put(`/products/update/${editData._id}`,
         editData
       );
 
@@ -341,11 +341,10 @@ const AdminProducts = () => {
           <div
             key={i}
             onClick={() => handleFilter(sub)}
-            className={`p-2 rounded cursor-pointer mb-2 ${
-              selectedSub === sub
-                ? "bg-[#8B6914]"
-                : "hover:bg-[#5a3a14]"
-            }`}
+            className={`p-2 rounded cursor-pointer mb-2 ${selectedSub === sub
+              ? "bg-[#8B6914]"
+              : "hover:bg-[#5a3a14]"
+              }`}
           >
             {sub}
           </div>
