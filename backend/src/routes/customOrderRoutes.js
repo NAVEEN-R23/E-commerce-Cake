@@ -7,7 +7,7 @@ const {
   deleteCustomOrder,
 } = require("../controllers/customOrderController"); // ✅ fixed spelling
 
-const upload = require("../middleware/multer");
+const upload = require("../middleware/uploadMiddleware");
 
 // ✅ Routes
 customOrderRouter.post("/custom-order", upload.single("image"), createCustomOrder);
